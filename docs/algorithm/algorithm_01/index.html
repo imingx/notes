@@ -1,0 +1,823 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=preload as=font href=https://notes.ming.ac/fonts/vendor/jost/jost-v4-latin-regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/vendor/jost/jost-v4-latin-700.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/KaTeX_Main-Regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/KaTeX_Math-Italic.woff2 type=font/woff2 crossorigin><script>(()=>{var b=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,a=localStorage.getItem("theme");b&&a===null&&(localStorage.setItem("theme","dark"),document.documentElement.setAttribute("data-dark-mode","")),b&&a==="dark"&&document.documentElement.setAttribute("data-dark-mode",""),a==="dark"&&document.documentElement.setAttribute("data-dark-mode","")})()</script><link rel=stylesheet href=https://notes.ming.ac/main.d4f02be82ed3a1bdb879afde3c6fe0915a9d87f60828ae6f3b2cef795fdb1f4d0c22526ee53dd6ea9cafb09336894a8b3e46dd9a0c83c990e3c30dd1c014195e.css integrity="sha512-1PAr6C7Tob24ea/ePG/gkVqdh/YIKK5vOyzveV/bH00MIlJu5T3W6pyvsJM2iUqLPkbdmgyDyZDjww3RwBQZXg==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><meta name=robots content="index, follow"><meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>「Algorithm」01 基础算法 | Ming Notes</title><meta name=description content="排序 二分 高精度 前缀和与差分 位运算 离散化 区间合并  消除同步 #  ios::sync_with_stdio(false);//让cin和标准输入输出不同步，提高cin的读取速度，不能再使用scanf和printf了。 scanf/getchar和cin不要一起用，printf/puts/putchar和cout不要一起用。 可以使用freopen  还可以加上 cin.tie(0) 来解除c++运行库层面的对数据传输的绑定。
+排序 # 1. 快速排序 # 基于分治。
+ 确定一个分界点，比如（以1开始）,取q[1]，q[(1+r)/2] ,q[r]， 随机为x 调整区间，小于等于x的在左边，大于等于x的在右边。等于x的可以在左边也可以在右边，也可以在边界上，不稳定。 递归处理左右两段。    方法一:
+ 开两个额外的数组,a[]，b[] 扫描q数组，如果q[i] ≤ x，存入a，如果q[i]&amp;gt;x，存入b。 然后将a数组的数存入q，b数组的数存入q。    方法二：
+ i和j指针，i指向初始，j指向末尾。然后i向右走，直到遇到一个大于x的数。j向左走，直到遇到一个小于等于x的数。然后交换，直到 j ≤ i.  模板：
+#include &amp;lt;iostream&amp;gt; using namespace std; const int N = 1e6 + 10; int n; int q[N]; void quick_sort(int q[], int l, int r) { if (l &amp;gt;= r) return; int x = q[(l+r) &amp;gt;&amp;gt; 1], i = l - 1, j = r + 1; while( i &amp;lt; j){ do i ++ ; while (q[i] &amp;lt; x); do j -- ; while (q[j] &amp;gt; x); if (i &amp;lt; j ) swap(q[i],q[j]); } //j可能比i小，也可能等于i。 quick_sort(q, l, j); //也可以换成 l, i -1 quick_sort(q, j + 1, r); //换成 i, r //后来说明不能换成i，因为也是会出现死循环问题。 //遇到这种情况，就考虑0,1。 //用j的话，x不能取右边界，（j可以取q[l]、q[(l+r)/2]） //j不能取 q[r]、q[(l+r+1)/2] //用i的话，x不能取左边界。 (i可以取q[r]、q[(l+r+1)/2]) //i不能取 q[l]、q[(l+r)/2] } //当下面换成i,r时，不能取x=q[l]，因为会出现死循环的问题。比如排序1，2 //i最终为0，j也是0，这样使用quick_sort()会死循环。 //同理，如果取j+1,r，不能取右边界。 int main(){ scanf(&amp;quot;%d&amp;quot;,&amp;amp;n); for(int i = 0; i &amp;lt; n; i ++ ) scanf(&amp;quot;%d&amp;quot;,&amp;amp;q[i]); quick_sort(q,0,n-1); for(int i = 0; i &amp;lt; n; i ++ ) printf(&amp;quot;%d &amp;quot;,q[i]); return 0; } 排序的话，可以使用 #include&amp;lt;algorithm&amp;gt; sort(q, q+n);    2."><link rel=canonical href=https://notes.ming.ac/docs/algorithm/algorithm_01/><meta property="og:locale" content="en_US"><meta property="og:type" content="article"><meta property="og:title" content="「Algorithm」01 基础算法"><meta property="og:description" content="排序 二分 高精度 前缀和与差分 位运算 离散化 区间合并  消除同步 #  ios::sync_with_stdio(false);//让cin和标准输入输出不同步，提高cin的读取速度，不能再使用scanf和printf了。 scanf/getchar和cin不要一起用，printf/puts/putchar和cout不要一起用。 可以使用freopen  还可以加上 cin.tie(0) 来解除c++运行库层面的对数据传输的绑定。
+排序 # 1. 快速排序 # 基于分治。
+ 确定一个分界点，比如（以1开始）,取q[1]，q[(1+r)/2] ,q[r]， 随机为x 调整区间，小于等于x的在左边，大于等于x的在右边。等于x的可以在左边也可以在右边，也可以在边界上，不稳定。 递归处理左右两段。    方法一:
+ 开两个额外的数组,a[]，b[] 扫描q数组，如果q[i] ≤ x，存入a，如果q[i]>x，存入b。 然后将a数组的数存入q，b数组的数存入q。    方法二：
+ i和j指针，i指向初始，j指向末尾。然后i向右走，直到遇到一个大于x的数。j向左走，直到遇到一个小于等于x的数。然后交换，直到 j ≤ i.  模板：
+#include <iostream> using namespace std; const int N = 1e6 + 10; int n; int q[N]; void quick_sort(int q[], int l, int r) { if (l >= r) return; int x = q[(l+r) >> 1], i = l - 1, j = r + 1; while( i < j){ do i ++ ; while (q[i] < x); do j -- ; while (q[j] > x); if (i < j ) swap(q[i],q[j]); } //j可能比i小，也可能等于i。 quick_sort(q, l, j); //也可以换成 l, i -1 quick_sort(q, j + 1, r); //换成 i, r //后来说明不能换成i，因为也是会出现死循环问题。 //遇到这种情况，就考虑0,1。 //用j的话，x不能取右边界，（j可以取q[l]、q[(l+r)/2]） //j不能取 q[r]、q[(l+r+1)/2] //用i的话，x不能取左边界。 (i可以取q[r]、q[(l+r+1)/2]) //i不能取 q[l]、q[(l+r)/2] } //当下面换成i,r时，不能取x=q[l]，因为会出现死循环的问题。比如排序1，2 //i最终为0，j也是0，这样使用quick_sort()会死循环。 //同理，如果取j+1,r，不能取右边界。 int main(){ scanf(&#34;%d&#34;,&n); for(int i = 0; i < n; i ++ ) scanf(&#34;%d&#34;,&q[i]); quick_sort(q,0,n-1); for(int i = 0; i < n; i ++ ) printf(&#34;%d &#34;,q[i]); return 0; } 排序的话，可以使用 #include<algorithm> sort(q, q+n);    2."><meta property="og:url" content="https://notes.ming.ac/docs/algorithm/algorithm_01/"><meta property="og:site_name" content="Ming Notes"><meta property="article:published_time" content="2021-11-09T12:35:01+08:00"><meta property="article:modified_time" content="2021-11-09T12:35:01+08:00"><meta property="og:image" content="https://notes.ming.ac/doks.png"><meta property="og:image:alt" content="Ming Notes"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content><meta name=twitter:creator content><meta name=twitter:title content="「Algorithm」01 基础算法"><meta name=twitter:description content><meta name=twitter:image content="https://notes.ming.ac/doks.png"><meta name=twitter:image:alt content="「Algorithm」01 基础算法"><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://notes.ming.ac/#/schema/organization/1","name":"Notes","url":"https://notes.ming.ac/","sameAs":["https://twitter.com/guomingming9","https://github.com/imingx/note"],"logo":{"@type":"ImageObject","@id":"https://notes.ming.ac/#/schema/image/1","url":"https://notes.ming.ac/logo-doks.png","width":512,"height":512,"caption":"Notes"},"image":{"@id":"https://notes.ming.ac/#/schema/image/1"}},{"@type":"WebSite","@id":"https://notes.ming.ac/#/schema/website/1","url":"https://notes.ming.ac/","name":"Ming Notes","description":"存放笔记的地方","publisher":{"@id":"https://notes.ming.ac/#/schema/organization/1"}},{"@type":"WebPage","@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/","url":"https://notes.ming.ac/docs/algorithm/algorithm_01/","name":"「Algorithm」01 基础算法","description":"","isPartOf":{"@id":"https://notes.ming.ac/#/schema/website/1"},"about":{"@id":"https://notes.ming.ac/#/schema/organization/1"},"datePublished":"2021-11-09T12:35:01CET","dateModified":"2021-11-09T12:35:01CET","breadcrumb":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/#/schema/breadcrumb/1"},"primaryImageOfPage":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/#/schema/image/2"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://notes.ming.ac/docs/algorithm/algorithm_01/"]}]},{"@type":"BreadcrumbList","@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/#/schema/breadcrumb/1","name":"Breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://notes.ming.ac","url":"https://notes.ming.ac","name":"Home"}},{"@type":"ListItem","position":3,"item":{"@type":"WebPage","@id":"https://notes.ming.ac/docs/","url":"https://notes.ming.ac/docs/","name":"Docs"}},{"@type":"ListItem","position":4,"item":{"@type":"WebPage","@id":"https://notes.ming.ac/docs/algorithm/","url":"https://notes.ming.ac/docs/algorithm/","name":"Algorithm"}},{"@type":"ListItem","position":5,"item":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/"}}]},{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://notes.ming.ac/#/schema/article/1","headline":"「Algorithm」01 基础算法","description":"","isPartOf":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/"},"mainEntityOfPage":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/"},"datePublished":"2021-11-09T12:35:01CET","dateModified":"2021-11-09T12:35:01CET","author":{"@id":"https://notes.ming.ac/#/schema/person/2"},"publisher":{"@id":"https://notes.ming.ac/#/schema/organization/1"},"image":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/#/schema/image/2"}}]},{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://notes.ming.ac/#/schema/person/2","name":"gmm","sameAs":["https://twitter.com/guomingming9","https://github.com/imingx"]}]},{"@context":"https://schema.org","@graph":[{"@type":"ImageObject","@id":"https://notes.ming.ac/docs/algorithm/algorithm_01/#/schema/image/2","url":"https://notes.ming.ac/doks.png","contentUrl":"https://notes.ming.ac/doks.png","caption":"「Algorithm」01 基础算法"}]}]}</script><meta name=theme-color content="#fff"><link rel=apple-touch-icon sizes=180x180 href=https://notes.ming.ac/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://notes.ming.ac/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://notes.ming.ac/favicon-16x16.png><link rel=manifest crossorigin=use-credentials href=https://notes.ming.ac/site.webmanifest></head><body class="docs single"><div class=header-bar></div><header class="navbar navbar-expand-md navbar-light doks-navbar"><nav class="container-xxl flex-wrap flex-md-nowrap" aria-label="Main navigation"><a class="navbar-brand p-0 me-auto" href=https://notes.ming.ac/ aria-label="Ming Notes">Ming Notes</a>
+<button class="btn btn-menu d-block d-md-none order-5" type=button data-bs-toggle=offcanvas data-bs-target=#offcanvasDoks aria-controls=offcanvasDoks aria-label="Open main menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button><div class="offcanvas offcanvas-start border-0 py-md-1" tabindex=-1 id=offcanvasDoks data-bs-backdrop=true aria-labelledby=offcanvasDoksLabel><div class="header-bar d-md-none"></div><div class="offcanvas-header d-md-none"><h2 class="h5 offcanvas-title ps-2" id=offcanvasDoksLabel><a class=text-dark href=https://notes.ming.ac/>Ming Notes</a></h2><button type=button class="btn-close text-reset me-2" data-bs-dismiss=offcanvas aria-label="Close main menu"></button></div><div class="offcanvas-body px-4"><h3 class="h6 text-uppercase mb-3 d-md-none">Main</h3><ul class="nav flex-column flex-md-row ms-md-n3"><li class=nav-item><a class="nav-link ps-0 py-1 active" href=https://notes.ming.ac/docs/prologue/introduction/>Docs</a></li><li class=nav-item><a class="nav-link ps-0 py-1" href=https://www.ming.ac>Blog</a></li></ul><hr class="text-black-50 my-4 d-md-none"><h3 class="h6 text-uppercase mb-3 d-md-none">Socials</h3><ul class="nav flex-column flex-md-row ms-md-auto me-md-n5 pe-md-2"><li class=nav-item><a class="nav-link ps-0 py-1" href=https://github.com/imingx><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg><small class="ms-2 d-md-none">GitHub</small></a></li></ul></div></div><button id=mode class="btn btn-link order-md-1" type=button aria-label="Toggle user interface mode">
+<span class=toggle-dark><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span><span class=toggle-light><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button></nav></header><nav class="doks-subnavbar py-2 sticky-lg-top" aria-label="Secondary navigation"><div class="container-xxl d-flex align-items-md-center"><form class="doks-search position-relative flex-grow-1 me-auto"><input id=search class="form-control is-search" type=search placeholder="Search docs..." aria-label="Search docs..." autocomplete=off><div id=suggestions class="shadow bg-white rounded d-none"></div></form><button class="btn doks-sidebar-toggle d-lg-none ms-3 order-3 collapsed" type=button data-bs-toggle=collapse data-bs-target=#doks-docs-nav aria-controls=doks-docs-nav aria-expanded=false aria-label="Toggle documentation navigation"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="doks doks-expand" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Expand</title><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="doks doks-collapse" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Collapse</title><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg></button></div></nav><div class=container-xxl><aside class=doks-sidebar><nav id=doks-docs-nav class="collapse d-lg-none" aria-label="Tertiary navigation"><ul class="list-unstyled collapsible-sidebar"><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-prologue aria-expanded=false>
+Prologue</button><div class=collapse id=section-prologue><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/introduction/>Introduction</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/commands/>Commands</a></li></ul></div></li><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-algorithm aria-expanded=true>
+algorithm</button><div class="collapse show" id=section-algorithm><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded active" href=https://notes.ming.ac/docs/algorithm/algorithm_01/>「Algorithm」01 基础算法</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_02/>「Algorithm」02 Data Structure</a></li></ul></div></li></ul></nav></aside></div><div class="wrap container-xxl" role=document><div class=content><div class="row flex-xl-nowrap"><div class="col-lg-5 col-xl-4 docs-sidebar d-none d-lg-block"><nav class=docs-links aria-label="Main navigation"><ul class="list-unstyled collapsible-sidebar"><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-prologue aria-expanded=false>
+Prologue</button><div class=collapse id=section-prologue><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/introduction/>Introduction</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/commands/>Commands</a></li></ul></div></li><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-algorithm aria-expanded=true>
+algorithm</button><div class="collapse show" id=section-algorithm><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded active" href=https://notes.ming.ac/docs/algorithm/algorithm_01/>「Algorithm」01 基础算法</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_02/>「Algorithm」02 Data Structure</a></li></ul></div></li></ul></nav></div><nav class="docs-toc d-none d-xl-block col-xl-3" aria-label="Secondary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#消除同步>消除同步</a></li><li><a href=#排序>排序</a><ul><li><a href=#1-快速排序>1. 快速排序</a></li><li><a href=#2归并排序>2.归并排序</a></li></ul></li><li><a href=#二分>二分</a><ul><li><a href=#1-整数二分>1. 整数二分</a></li><li><a href=#2-浮点数二分>2. 浮点数二分</a></li></ul></li><li><a href=#高精度>高精度</a><ul><li><a href=#加法>加法：</a></li><li><a href=#减法>减法：</a></li><li><a href=#乘法>乘法：</a></li><li><a href=#除法>除法：</a></li></ul></li><li><a href=#前缀和-与-差分>前缀和 与 差分</a><ul><li><ul><li><a href=#前缀和><strong>前缀和：</strong></a></li></ul></li><li><a href=#二维前缀和>二维前缀和</a></li><li><a href=#差分>差分</a></li><li><a href=#差分矩阵>差分矩阵</a></li></ul></li><li><a href=#双指针算法>双指针算法</a></li><li><a href=#位运算>位运算</a><ul><li><a href=#第k位的值>第k位的值</a></li><li><a href=#lowbit操作>lowbit操作。</a></li></ul></li><li><a href=#离散化>离散化</a><ul><li><a href=#unique>Unique</a></li><li><a href=#区间和>区间和：</a></li></ul></li><li><a href=#区间合并>区间合并</a></li></ul></nav></div></nav><main class="docs-content col-lg-11 col-xl-9"><h1>「Algorithm」01 基础算法</h1><p class=lead></p><nav class=d-xl-none aria-label="Quaternary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#消除同步>消除同步</a></li><li><a href=#排序>排序</a><ul><li><a href=#1-快速排序>1. 快速排序</a></li><li><a href=#2归并排序>2.归并排序</a></li></ul></li><li><a href=#二分>二分</a><ul><li><a href=#1-整数二分>1. 整数二分</a></li><li><a href=#2-浮点数二分>2. 浮点数二分</a></li></ul></li><li><a href=#高精度>高精度</a><ul><li><a href=#加法>加法：</a></li><li><a href=#减法>减法：</a></li><li><a href=#乘法>乘法：</a></li><li><a href=#除法>除法：</a></li></ul></li><li><a href=#前缀和-与-差分>前缀和 与 差分</a><ul><li><ul><li><a href=#前缀和><strong>前缀和：</strong></a></li></ul></li><li><a href=#二维前缀和>二维前缀和</a></li><li><a href=#差分>差分</a></li><li><a href=#差分矩阵>差分矩阵</a></li></ul></li><li><a href=#双指针算法>双指针算法</a></li><li><a href=#位运算>位运算</a><ul><li><a href=#第k位的值>第k位的值</a></li><li><a href=#lowbit操作>lowbit操作。</a></li></ul></li><li><a href=#离散化>离散化</a><ul><li><a href=#unique>Unique</a></li><li><a href=#区间和>区间和：</a></li></ul></li><li><a href=#区间合并>区间合并</a></li></ul></nav></div></nav><ul><li>排序</li><li>二分</li><li>高精度</li><li>前缀和与差分</li><li>位运算</li><li>离散化</li><li>区间合并</li></ul><h1 id=消除同步>消除同步 <a href=#%e6%b6%88%e9%99%a4%e5%90%8c%e6%ad%a5 class=anchor aria-hidden=true>#</a></h1><ul><li>ios::sync_with_stdio(false);//让cin和标准输入输出不同步，提高cin的读取速度，不能再使用scanf和printf了。</li><li>scanf/getchar和cin不要一起用，printf/puts/putchar和cout不要一起用。</li><li>可以使用freopen</li></ul><p>还可以加上 cin.tie(0) 来解除c++运行库层面的对数据传输的绑定。</p><h1 id=排序>排序 <a href=#%e6%8e%92%e5%ba%8f class=anchor aria-hidden=true>#</a></h1><h2 id=1-快速排序>1. 快速排序 <a href=#1-%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f class=anchor aria-hidden=true>#</a></h2><p>基于分治。</p><ol><li>确定一个分界点，比如（以1开始）,取q[1]，q[(1+r)/2] ,q[r]， 随机为x</li><li>调整区间，小于等于x的在左边，大于等于x的在右边。等于x的可以在左边也可以在右边，也可以在边界上，不稳定。</li><li>递归处理左右两段。</li></ol><ul><li><p>方法一:</p><ol><li>开两个额外的数组,a[]，b[]</li><li>扫描q数组，如果q[i] ≤ x，存入a，如果q[i]>x，存入b。</li><li>然后将a数组的数存入q，b数组的数存入q。</li></ol></li><li><p>方法二：</p><ol><li>i和j指针，i指向初始，j指向末尾。然后i向右走，直到遇到一个大于x的数。j向左走，直到遇到一个小于等于x的数。然后交换，直到 j ≤ i.</li></ol><p><strong>模板：</strong></p><pre><code class=language-c>#include &lt;iostream&gt;
+
+using namespace std;
+
+const int N = 1e6 + 10;
+
+int n;
+int q[N];
+
+void quick_sort(int q[], int l, int r)
+{
+        if (l &gt;= r) return;
+        int x = q[(l+r) &gt;&gt; 1], i = l - 1, j = r + 1;
+
+        while( i &lt; j){
+                do i ++ ; while (q[i] &lt; x);
+                do j -- ; while (q[j] &gt; x);
+                if (i &lt; j ) swap(q[i],q[j]);
+        }
+        //j可能比i小，也可能等于i。
+        quick_sort(q, l, j); //也可以换成 l, i -1
+        quick_sort(q, j + 1, r); //换成 i, r
+        //后来说明不能换成i，因为也是会出现死循环问题。
+        //遇到这种情况，就考虑0,1。
+
+        //用j的话，x不能取右边界，（j可以取q[l]、q[(l+r)/2]）
+                                //j不能取 q[r]、q[(l+r+1)/2]
+        //用i的话，x不能取左边界。 (i可以取q[r]、q[(l+r+1)/2])
+                                //i不能取 q[l]、q[(l+r)/2]
+}
+
+//当下面换成i,r时，不能取x=q[l]，因为会出现死循环的问题。比如排序1，2
+//i最终为0，j也是0，这样使用quick_sort()会死循环。
+//同理，如果取j+1,r，不能取右边界。
+
+int main(){
+	scanf(&quot;%d&quot;,&amp;n);
+	for(int i = 0; i &lt; n; i ++ ) scanf(&quot;%d&quot;,&amp;q[i]);
+
+	quick_sort(q,0,n-1);
+
+	for(int i = 0; i &lt; n; i ++ ) printf(&quot;%d &quot;,q[i]);
+	return 0;
+}
+
+排序的话，可以使用
+#include&lt;algorithm&gt;
+sort(q, q+n);
+</code></pre></li></ul><h2 id=2归并排序>2.归并排序 <a href=#2%e5%bd%92%e5%b9%b6%e6%8e%92%e5%ba%8f class=anchor aria-hidden=true>#</a></h2><p>类似快排，也是分治。</p><ol><li>以中间点为分界点。</li><li>递归排序左边和右边。</li><li>归并左右两个有序的数组为1个有序的数组。<ol><li>对两个数组，取两个指针指向数组的左端点。然后比较他们的值，取较小者，然后移动指针，接着继续比较，直到一个指针到头，然后将另一个数组的剩余值取走。</li><li>当指针指向的值相同时，取左边数组的值，保持稳定，这说明归并排序是稳定的。快排是不稳定的。而让快排稳定的话，可以用pair。</li></ol></li></ol><p>为什么归并排序是O(nlogn),怎么分析？</p><p>归并排序总共有logn层，每层都是O(n)，所以是O(nlogn)</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_500x0_resize_box_3.png 500w" width=1170 height=216 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img1_hu71b10bf21b3f2d216d91e3acf03fb7ec_94015_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img1.png width=1170 height=216 alt=Untitled></noscript></figure></p><pre><code class=language-c>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 1e6 + 10;
+
+int n;
+int q[N], tmp[N];
+
+void merge_sort(int q[], int l, int r)
+{
+	if (l &gt;= r) return;
+
+	int mid = (l + r) &gt;&gt; 1; //+优先级比&gt;&gt;大，可以不加括号
+	
+	merge_sort(q, l, mid), merge_sort(q, mid + 1, r);
+
+	int k = 0, i = l, j = mid + 1;
+	
+	while (i &lt;= mid &amp;&amp; j &lt;= r)
+			if (q[i] &lt;= q[j]) tmp[k++] = q[i++];
+			else tmp[k++] = q[j++];
+
+	while ( i &lt;= mid) tmp[k++] = q[i++];
+	while ( j &lt;= r) tmp[k++] = q[j++];	
+
+	for ( i = l, j = 0; i &lt;= r; i++, j++) q[i] = tmp[j];
+}
+
+int main(){
+	scanf(&quot;%d&quot;,&amp;n);
+	for(int i = 0; i &lt; n; i ++ ) scanf(&quot;%d&quot;,&amp;q[i]);
+		
+	merge_sort(q, 0, n-1);
+
+	for(int i = 0; i &lt; n; i ++ ) printf(&quot;%d &quot;,q[i]);
+	return 0;
+}
+</code></pre><h1 id=二分>二分 <a href=#%e4%ba%8c%e5%88%86 class=anchor aria-hidden=true>#</a></h1><h2 id=1-整数二分>1. 整数二分 <a href=#1-%e6%95%b4%e6%95%b0%e4%ba%8c%e5%88%86 class=anchor aria-hidden=true>#</a></h2><p>模板：</p><pre><code class=language-c>// 区间[l,r]被划分为[l,mid]与[mid + 1,r]时用
+int bsearch_1(int l, int r) {
+		while( l &lt; r)
+		{
+				int mid = l + r &gt;&gt; 1;
+				if (check(mid)) r= mid; //check判断mid是否满足性质
+				else l = mid + 1;
+		}
+		return l;
+}
+
+//区间[l,r]被划分成[l, mid - 1]和[mid, r]时使用。
+int bsearch_2(int l, int r){
+		while(l &lt; r)
+		{	
+				int mid = l + r + 1 &gt;&gt; 1;
+				if(check(mid)) l = mid;
+				else r = mid -1;
+		}
+		return l;
+}
+</code></pre><ul><li>二分的本质：寻找区间的边界。边界的左边满足某种性质，边界的右边满足另一种性质。</li></ul><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_500x0_resize_box_3.png 500w" width=953 height=380 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img2_hu416412891583679fe7aab5a39afb2b54_138466_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img2.png width=953 height=380 alt=Untitled></noscript></figure></p><ol><li>mid = (l+r+1)/2 找红色的边界点,检测中间值是否满足check。<ol><li>check检查是否满足红色。</li><li>if mid满足check，那么需要向右找，那么 l = mid; [mid, r]</li><li>if mid不满足check，那么需要向左找，那么r = mid -1：[l , mid - 1]</li></ol></li><li>mid = (l + r)/ 2寻找绿色的边界点。check检测是否满足绿色。<ol><li>if mid 满足 check, 那么需要向左找，那么 r = mid; [l , mid]</li><li>if mid 不满足 check, 那么需要向右找，那么 l = mid + 1; [mid + 1, r]</li></ol></li></ol><p>为什么第一个需要mid = (l + r + 1)/2 ，因为如果r = l + 1，如果不加一，那么mid = l，区间的更新为：[l,r] 和[l,l]，陷入了死循环。</p><p>所以总的来说，我们如何使用上面两个？</p><p>1，2，2，3，3，4。</p><p>找3的起始坐标和终止坐标。</p><pre><code class=language-c>//https://www.acwing.com/problem/content/791/
+#include &lt;iostream&gt;
+
+using namespace std;
+const int N = 1e5 + 10;
+
+int n,m;
+int q[N];
+
+int main(){
+		scanf(&quot;%d%d&quot;, &amp;n, &amp;m);
+		for(int i = 0; i &lt; n; i++ ) scanf(&quot;%d&quot;, &amp;q[i]);
+		while(m--){
+				int x;
+				scanf(&quot;%d&quot;, &amp;x);
+				int l = 0, r = n -1;
+				while ( l &lt; r)
+				{
+						int mid = l + r &gt;&gt; 1;
+						if (q[mid] &gt;= x){ //找起始坐标
+								 r = mid;
+						} else 
+								 l = mid + 1;
+				}
+				// l == r
+				if (q[l] != x) cout &lt;&lt; &quot;-1 -1&quot; &lt;&lt; endl;
+				else
+				{
+						cout &lt;&lt; l &lt;&lt; &quot; &quot;;
+						int l = 0, r = n - 1;
+						while (l &lt; r){
+								int mid = (l + r + 1) &gt;&gt; 1;
+								if (q[mid] &lt;= x) l = mid; // l =mid，需要 l+r+1 &gt;&gt; 1
+								else r = mid - 1;
+						}
+						cout &lt;&lt; l &lt;&lt; endl;
+				}
+				
+		}
+
+		return 0;
+}
+</code></pre><h2 id=2-浮点数二分>2. 浮点数二分 <a href=#2-%e6%b5%ae%e7%82%b9%e6%95%b0%e4%ba%8c%e5%88%86 class=anchor aria-hidden=true>#</a></h2><pre><code class=language-c>#include&lt;iostream&gt;
+
+using namespace std;
+
+int main(){
+		
+		double x;
+		cin &gt;&gt; x;
+
+		double l = 0, r= x;
+		while( r - l &gt; 1e-6){ //1e8
+				double mid = (l+r)/2;
+				if (mid * mid &gt;= x)
+						r = mid;
+				else l = mid;
+		}
+
+		/*
+			迭代100次;
+			for (int i = 0; i &lt; 100; i++){
+					double mid = (l+r)/2;
+					if (mid * mid &gt;= x)	r = mid;
+							else l = mid;
+			}
+		*/	
+		printf(&quot;%lf\n&quot;, l);
+		return 0;
+}
+
+//保留几位小数，增加2有效位。保留2位，1e-4
+</code></pre><p>三次方根：</p><pre><code class=language-c>#include&lt;iostream&gt;
+#include&lt;cmath&gt;
+using namespace std;
+
+int main(){
+		
+		double x;
+		cin &gt;&gt; x;
+	    double l = -1000, r= 1000;
+		while( r - l &gt; 1e-8){
+				double mid = (l+r)/2;
+				if (mid * mid *mid &gt;= x)
+						r = mid;
+				else l = mid;
+		}
+
+		printf(&quot;%lf\n&quot;, l);
+		return 0;
+}
+</code></pre><p>牛顿迭代法求平方根：a 是待求平方根的数</p><p>$$x = \frac{x^2_0+a}{2x_0}$$</p><p>如何通俗易懂地讲解牛顿迭代法求开方？数值分析？ - 杨华的回答 - 知乎
+https://www.zhihu.com/question/20690553/answer/15864267</p><h1 id=高精度>高精度 <a href=#%e9%ab%98%e7%b2%be%e5%ba%a6 class=anchor aria-hidden=true>#</a></h1><p>只有C++需要关注。Python默认数是无限大，Java有大整数BigInteger和BigDecimal。</p><ol><li>A + B</li><li>A - B</li><li>A * a len(A) ≤ 10^6 a ≤ 10^9</li><li>A / a 求商和余数</li></ol><p>存储方法：比如 123456789</p><ol><li>给一个数组a[9]，那么a[0] = 9，a[1] = 8，……a[8] = 1，数组的低位存数字的低位。</li></ol><h2 id=加法>加法： <a href=#%e5%8a%a0%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;string&gt;
+
+using namespace std;
+
+const int N = 1e6 + 10;
+
+vector&lt;int&gt; add(vector&lt;int&gt; &amp;A, vector&lt;int&gt;&amp;B){
+    vector&lt;int&gt; C;
+    
+    int t = 0; //进位
+    for(int i = 0; i &lt; A.size() || i &lt; B.size(); i ++){
+        if (i &lt; A.size()) t += A[i];
+        if (i &lt; B.size()) t += B[i];
+        C.push_back(t % 10);
+        t /= 10;
+    }
+    
+    if(t) C.push_back(t);
+    return C;
+}
+
+/*
+vector&lt;int&gt; add(vector&lt;int&gt; &amp;A, vector&lt;int&gt;&amp;B){
+    vector&lt;int&gt; C;
+	    
+		if (A.size() &lt; B.size()) return add(B,A); 
+    int t = 0; //进位
+    for(int i = 0; i &lt; A.size(); i ++){
+			  t += A[i];
+        if (i &lt; B.size()) t += B[i];
+        C.push_back(t % 10);
+        t /= 10;
+    }
+    
+    if(t) C.push_back(t);
+    return C;
+}
+
+*/
+
+int main(){
+		string a,b;
+		vector&lt;int&gt; A,B;
+				
+		cin &gt;&gt; a &gt;&gt; b;
+		for (int i = a.size() - 1; i &gt;= 0; i --) A.push_back(a[i] - '0');
+		for (int i = b.size() - 1; i &gt;= 0; i --) B.push_back(b[i] - '0');
+		
+		auto C = add(A,B);
+		for (int i = C.size() - 1; i &gt;= 0; i --) printf(&quot;%d&quot;,C[i]);
+		
+		return 0;
+}
+</code></pre><p>如果每一个存放不止一位数字：</p><pre><code class=language-cpp>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+const int base = 1000000000;
+
+vector&lt;int&gt; add(vector&lt;int&gt; &amp;A, vector&lt;int&gt; &amp;B)
+{
+    if (A.size() &lt; B.size()) return add(B, A);
+
+    vector&lt;int&gt; C;
+    int t = 0;
+    for (int i = 0; i &lt; A.size(); i ++ )
+    {
+        t += A[i];
+        if (i &lt; B.size()) t += B[i];
+        C.push_back(t % base);
+        t /= base;
+    }
+
+    if (t) C.push_back(t);
+    return C;
+}
+
+int main()
+{
+    string a, b;
+    vector&lt;int&gt; A, B;
+    cin &gt;&gt; a &gt;&gt; b;
+
+    for (int i = a.size() - 1, s = 0, j = 0, t = 1; i &gt;= 0; i -- )
+    {
+        s += (a[i] - '0') * t;
+        j ++, t *= 10;
+        if (j == 9 || i == 0)
+        {
+            A.push_back(s);
+            s = j = 0;
+            t = 1;
+        }
+    }
+    for (int i = b.size() - 1, s = 0, j = 0, t = 1; i &gt;= 0; i -- )
+    {
+        s += (b[i] - '0') * t;
+        j ++, t *= 10;
+        if (j == 9 || i == 0)
+        {
+            B.push_back(s);
+            s = j = 0;
+            t = 1;
+        }
+    }
+
+    auto C = add(A, B);
+
+    cout &lt;&lt; C.back();
+    for (int i = C.size() - 2; i &gt;= 0; i -- ) printf(&quot;%09d&quot;, C[i]);
+    cout &lt;&lt; endl;
+
+    return 0;
+}
+
+作者：yxc
+链接：https://www.acwing.com/activity/content/code/content/39792/
+来源：AcWing
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+</code></pre><h2 id=减法>减法： <a href=#%e5%87%8f%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;string&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+bool cmp(vector&lt;int&gt; &amp;A, vector&lt;int&gt;&amp;B) {
+    if (A.size() != B.size()) return A.size() &gt; B.size();
+    for(int i = A.size() - 1 ; i &gt;= 0; i--) 
+        if(A[i] != B[i])
+            return A[i] &gt; B[i];
+    return true;
+}
+
+vector&lt;int&gt; sub(vector&lt;int&gt;&amp;A, vector&lt;int&gt;&amp;B){
+    vector&lt;int&gt; C;
+    for (int i = 0, t =0; i &lt; A.size(); ++ i){
+        t = A[i] - t;
+        if (i &lt; B.size()) t -= B[i];
+        C.push_back((t + 10) % 10);
+				//数学，当t小于0，就可以+10，而如果t &gt;=0， 就无影响；
+        if ( t &lt; 0) t = 1; //有借位
+        else t = 0;
+    }
+    
+    while(C.size() &gt; 1 &amp;&amp; C.back() == 0) C.pop_back();
+    
+    return C;
+}
+
+int main(){
+    string a,b;
+    vector&lt;int&gt; A,B;
+    cin &gt;&gt; a &gt;&gt; b;
+    for(int i = a.size() - 1; i &gt;= 0; -- i) A.push_back(a[i] - '0');
+    for(int i = b.size() - 1; i &gt;= 0; -- i) B.push_back(b[i] - '0');
+    
+    if (cmp(A,B)) {
+        auto C = sub(A,B);
+        for (int i = C.size() - 1; i &gt;= 0; -- i) printf(&quot;%d&quot;, C[i]);
+    } else {
+        auto C = sub(B,A);
+        
+        printf(&quot;-&quot;);
+        for (int i = C.size() - 1; i &gt;= 0; -- i) printf(&quot;%d&quot;, C[i]);
+    }
+    return 0;
+}
+</code></pre><h2 id=乘法>乘法： <a href=#%e4%b9%98%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;string&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+vector&lt;int&gt; mul(vector&lt;int&gt;&amp;A, int b){
+    vector&lt;int&gt; C;
+    
+    int t = 0;
+    for(int i = 0; i &lt; A.size() || t; ++ i) {
+        if (i &lt; A.size()) t += A[i] * b;
+        C.push_back(t % 10);        
+        t /= 10;
+    }
+   
+    while(C.size() &gt; 1 &amp;&amp; C.back() == 0) C.pop_back(); 
+    return C;
+}
+
+int main(){
+    string a;
+    int b;
+    vector&lt;int&gt; A;
+    
+    cin &gt;&gt; a &gt;&gt; b;
+    
+    for(int i = a.size() - 1; i &gt;= 0; -- i) A.push_back(a[i] - '0');
+
+    auto C = mul(A,b);
+    for (int i = C.size() - 1; i &gt;= 0; -- i) printf(&quot;%d&quot;, C[i]);
+   
+    return 0;
+}
+</code></pre><h2 id=除法>除法： <a href=#%e9%99%a4%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;string&gt;
+#include&lt;vector&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+vector&lt;int&gt; div(vector&lt;int&gt; &amp;A, int b, int &amp;r) {
+    vector&lt;int&gt; C;
+    r = 0;
+    for(int i = A.size() - 1; i &gt;= 0; -- i) {
+        r = r * 10 + A[i]; 
+        C.push_back(r / b);
+        r %= b;
+    }
+    
+    reverse(C.begin(), C.end());
+    
+    while(C.size() &gt; 1 &amp;&amp; C.back() == 0) C.pop_back();
+    return C;
+}
+
+int main(){
+    string a;
+    int b;
+    
+    cin &gt;&gt; a &gt;&gt; b;
+    
+    vector&lt;int&gt; A;
+    
+    for(int i = a.size() - 1; i &gt;= 0; -- i) A.push_back(a[i] - '0');
+    
+    int r = 0;
+    auto C = div(A, b, r);
+    
+    for(int i = C.size() - 1; i &gt;= 0; -- i) printf(&quot;%d&quot;, C[i]);
+    
+    cout &lt;&lt; endl &lt;&lt; r &lt;&lt; endl;
+    return 0;
+}
+</code></pre><h1 id=前缀和-与-差分>前缀和 与 差分 <a href=#%e5%89%8d%e7%bc%80%e5%92%8c-%e4%b8%8e-%e5%b7%ae%e5%88%86 class=anchor aria-hidden=true>#</a></h1><p>前缀和与差分是逆运算。</p><h3 id=前缀和><strong>前缀和：</strong> <a href=#%e5%89%8d%e7%bc%80%e5%92%8c class=anchor aria-hidden=true>#</a></h3><ul><li>一个长度为n的数组</li><li>然后前缀和数组,Si = 前i个数的和（从a1、a2到ai）。</li><li>定义$S_0 = 0$;</li></ul><p>问题是如何求Si，求前i个和即可。</p><p>！作用：求一段数字的和。比如求[l, r]，那么就是求</p><p>$$S_r - S_{l-1}$$</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+int n, m;
+int a[N], s[N];
+
+int main(){
+    //ios::sync_with_stdio(false);//让cin和标准输入输出不同步，提高cin的读取速度，不能再使用scanf和printf了。
+    //可以，但是scanf/getchar和cin不要一起用，printf/puts/putchar和cout不要一起用。
+    //可以使用freopen。
+    
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    for (int i = 1; i &lt;= n; ++ i) scanf(&quot;%d&quot;, &amp;a[i]);
+    
+    for (int i = 1; i &lt;= n; ++ i) s[i] = s[i - 1] + a[i];
+    
+    while(m --)
+    {
+        int l,r;
+        scanf(&quot;%d%d&quot;,&amp;l,&amp;r);
+        printf(&quot;%d\n&quot;,s[r] - s[l - 1]);
+    }
+    
+    return 0;    
+}
+</code></pre><h2 id=二维前缀和>二维前缀和 <a href=#%e4%ba%8c%e7%bb%b4%e5%89%8d%e7%bc%80%e5%92%8c class=anchor aria-hidden=true>#</a></h2><p><img class="img-fluid lazyload blur-up" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img3_hu72fdd2feae27d3a01ec52cf2a527160f_24580_20x0_resize_box_3.png data-src=https://notes.ming.ac/docs/algorithm/algorithm_01/img3.png width=241 height=281 alt=Untitled></p><p>从$(x_1,y_1)\ to \ (x_2,y_2)$，的区域的面积。那么就是：</p><p>$$S_{x_2y_2}-S_{x_2(y_1-1)}-S_{(x_1-1)y_2}+S_{(x_1-1)(y_1-1)}$$</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+int n, m, q;
+const int N = 1e3 + 10;
+
+int a[N][N], s[N][N];
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
+    for (int i = 1; i &lt;= n; ++ i)
+        for (int j = 1; j &lt;= m; ++ j){
+            scanf(&quot;%d&quot;, &amp;a[i][j]);
+            s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + a[i][j];    
+        }
+    
+    while(q --){
+        int x1,y1,x2,y2;
+        scanf(&quot;%d%d%d%d&quot;, &amp;x1,&amp;y1,&amp;x2,&amp;y2);
+        printf(&quot;%d\n&quot;, s[x2][y2] - s[x1 - 1][y2] - s[x2][y1-1] + s[x1-1][y1-1]);
+    }
+    
+    return 0;
+}
+</code></pre><h2 id=差分>差分 <a href=#%e5%b7%ae%e5%88%86 class=anchor aria-hidden=true>#</a></h2><p>a数组是b数组的前缀和，b数组是a的差分。</p><p>对于a1, a2, a3……an</p><p>构造 b1, b2, b3, bn</p><p>使得 aj = b1 + b2 + …… + bj</p><p><img class="img-fluid lazyload blur-up" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img4_hu8a482234da13ce0b184858fca4af1b9c_77344_20x0_resize_box_3.png data-src=https://notes.ming.ac/docs/algorithm/algorithm_01/img4.png width=299 height=533 alt=Untitled></p><p><strong>用处：a和b数组在O（n）时间可以相互转化。</strong></p><p>让al到ar，[l, r]的数都加上c，用差分只要O(1)。只要让$b_l+c$，然后让 $b_{r+1}-c$</p><p>可以假定a数组和b数组全是零，只要看插入操作，即在[1, 1]的数都加上a1, [2,2]的数都加上a2</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+int n, m;
+int a[N], b[N];
+
+void insert(int l, int r, int c)
+{
+    b[l] += c;
+    b[r + 1] -= c;
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    for (int i = 1; i &lt;= n; ++ i) scanf(&quot;%d&quot;, &amp;a[i]);
+    
+    for (int i = 1; i &lt;= n; ++ i) insert(i, i, a[i]);
+
+    while(m --) {
+        int l, r, c;   
+        scanf(&quot;%d%d%d&quot;, &amp;l, &amp;r, &amp;c);
+        insert(l, r, c);
+    }
+        
+    for (int i = 1; i &lt;= n; ++ i) {
+        b[i] += b[i-1]; //求前缀和
+        printf(&quot;%d &quot;, b[i]);
+    }   
+    return 0;
+}
+</code></pre><h2 id=差分矩阵>差分矩阵 <a href=#%e5%b7%ae%e5%88%86%e7%9f%a9%e9%98%b5 class=anchor aria-hidden=true>#</a></h2><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_500x0_resize_box_3.png 500w" width=422 height=243 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img5_hu0524f26406dcd6ac77eb866ce8a719c6_39837_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img5.png width=422 height=243 alt=Untitled></noscript></figure></p><p>初始化时，也是可以相当于在(i, j)和(i, j)之间增加$a_{i,j}$</p><p>b数组是a数组的差分，a数组是b数组的前缀和。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 1e3 + 10;
+
+int n, m, q;
+int a[N][N], b[N][N];
+
+void insert(int x1, int y1, int x2, int y2, int c)
+{
+    b[x1][y1] += c;
+    b[x2 + 1][y1] -= c;
+    b[x1][y2+1] -=c;
+    b[x2+1][y2+1] +=c;
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m &gt;&gt; q;
+    for (int i = 1; i &lt;= n; ++ i) 
+        for (int j = 1; j &lt;= m; ++ j)
+            scanf(&quot;%d&quot;,&amp;a[i][j]);
+    
+    for (int i = 1; i &lt;= n; ++ i)
+        for (int j = 1; j &lt;= m; ++ j)
+            insert(i,j,i,j,a[i][j]);
+        
+
+    while(q --) {
+        int x1,y1,x2,y2,c;
+        scanf(&quot;%d%d%d%d%d&quot;, &amp;x1, &amp;y1, &amp;x2, &amp;y2, &amp;c);
+        insert(x1, y1, x2, y2, c);
+    }
+    
+    for (int i = 1; i &lt;= n; ++ i) {
+        for (int j = 1; j &lt;= m; ++ j){
+            b[i][j] += b[i -1][j] + b[i][j -1] - b[i- 1][j-1]; 
+            printf(&quot;%d &quot;, b[i][j]);
+        }
+        puts(&quot;&quot;);
+    }
+            
+    return 0;
+}
+</code></pre><h1 id=双指针算法>双指针算法 <a href=#%e5%8f%8c%e6%8c%87%e9%92%88%e7%ae%97%e6%b3%95 class=anchor aria-hidden=true>#</a></h1><p>包括归并排序</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_500x0_resize_box_3.png 500w" width=751 height=386 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img6_hu682a613c06dcef7d45eb342b48dc4850_99221_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img6.png width=751 height=386 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>for(int i = 0, j = 0; i &lt; n; ++ i){
+		while( j &lt; i &amp;&amp; check(i, j)) ++ j;
+		//具体逻辑
+}
+</code></pre><p>核心思想：把O(n^2)两重循环 变成 O(n).</p><p>举个例子，输入一个句子，输出每个单词：</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+int main() {
+    char str[1000];
+    
+    cin.getline(str, 1000);
+    
+    int n = strlen(str);
+    
+    for (int i = 0; i &lt; n; ++ i)
+    {
+        int j = i;
+        while( j &lt; n &amp;&amp; str[j] !=' ') ++ j;
+        for (int k = i; k &lt; j; k ++) cout &lt;&lt; str[k];
+        
+        cout &lt;&lt; endl;
+        
+        i = j;
+    }
+    
+    return 0;
+}
+</code></pre><p><strong>799. 最长连续不重复子序列</strong></p><p>check检验是否有重复元素</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_500x0_resize_box_3.png 500w" width=575 height=474 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img7_hu5a28877f1e9ad4ec9e3c17d320b7637f_68189_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img7.png width=575 height=474 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>//数据很大时可以用hash table来做
+#include&lt;iostream&gt;
+
+using namespace std;
+const int N = 1e5 + 10;
+
+int n;
+int a[N], s[N];
+
+int main() {
+    cin &gt;&gt; n;
+    
+    for (int i = 0; i &lt; n; ++ i ) 
+        scanf(&quot;%d&quot;,&amp;a[i]);
+    
+    int res = 0;
+    for (int i = 0, j = 0; i &lt; n; ++ i )
+    {
+        ++ s[a[i]];
+        while (j &lt;= i &amp;&amp; s[a[i]] &gt; 1) {
+            -- s[a[j]];
+            ++ j;
+        }
+        
+        res = max(res, i - j + 1);
+    }
+    
+    cout &lt;&lt; res;
+    return 0;
+}
+</code></pre><h1 id=位运算>位运算 <a href=#%e4%bd%8d%e8%bf%90%e7%ae%97 class=anchor aria-hidden=true>#</a></h1><h2 id=第k位的值>第k位的值 <a href=#%e7%ac%ack%e4%bd%8d%e7%9a%84%e5%80%bc class=anchor aria-hidden=true>#</a></h2><ol><li>n的二进制表示中，第k位是几？个位是第零位。<ol><li>先把第k位移到最后一位， n &#187; k</li><li>再看个位是几。x & 1.</li><li>即 (n &#187; k) & 1，&#187;运算符的优先级大于 &，可以不加括号。</li></ol></li></ol><h2 id=lowbit操作>lowbit操作。 <a href=#lowbit%e6%93%8d%e4%bd%9c class=anchor aria-hidden=true>#</a></h2><p>可以用来统计x中的1的数量。</p><p>lowbit(x)，返回x的最后一位的1。</p><p>Lowbit( 1010) ——> 得到最后一个1。</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_500x0_resize_box_3.png 500w" width=624 height=293 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img8_huc2b5851bf3eac00ecd696f0c7ca835d6_35979_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img8.png width=624 height=293 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>-x = ~x + 1。 补码表示。
+
+那么 x &amp; -x = x &amp; ( ~x + 1)
+</code></pre><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+int lowbit(int x)
+{
+    return x &amp; -x;
+}
+
+int main (){
+    int n;
+    cin &gt;&gt; n;
+    
+    while(n--){
+        int x;
+        cin &gt;&gt; x;
+        
+        int res = 0;
+        while(x) x -= lowbit(x),  ++ res;
+        cout &lt;&lt; res &lt;&lt; &quot; &quot;;
+    }
+
+    return 0;
+}
+</code></pre><p>一个数 -x 的：</p><p>原码：最高位取1.</p><p>反码：各位取反</p><p>补码：各位取反，加一。</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_500x0_resize_box_3.png 500w" width=488 height=295 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img9_hu7a3c359237035a2a708f4ef4c2518a1d_68992_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img9.png width=488 height=295 alt=Untitled></noscript></figure></p><h1 id=离散化>离散化 <a href=#%e7%a6%bb%e6%95%a3%e5%8c%96 class=anchor aria-hidden=true>#</a></h1><p>整数的离散化：</p><p>值域为$0-{10}^9$，个数有$10^5$。映射到0-n</p><p>比如a[]: 1, 3, 100, 2000, 500000. 将它们映射到0，1，2，3，4，</p><p>注意：</p><ol><li>a[]中可能有重复的元素，需要去重</li><li>如何算出a[i] 离散化后的值是多少？二分。</li></ol><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_500x0_resize_box_3.png 500w" width=954 height=534 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img10_hu6e12db6e42f69a5fc727c84120189411_169644_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img10.png width=954 height=534 alt=Untitled></noscript></figure></p><p>unique是将alls数组进行去重，将重复元素放在末尾，返回值是一个迭代器，指向非重复元素的最后一个，然后在删除这些元素就好。</p><p>找到第一个≥ x的位置, 这个是边界问题。</p><p>返回r+1是映射到1,2,……n</p><h2 id=unique>Unique <a href=#unique class=anchor aria-hidden=true>#</a></h2><p>如何实现Unique函数？</p><p>比如1 1 2 2 2 3 4 5 5 5 6</p><pre><code class=language-cpp>vector&lt;int&gt;::iterator unique(vector&lt;int&gt; &amp;a)
+{
+		int j = 0;
+		for(int i = 0; i &lt; a.size(); ++ i )
+		{
+				if (!i || a[i] != a[i-1])
+					a[j++] = a[i]
+		} 
+
+		return a.begin() + j;
+}
+</code></pre><h2 id=区间和>区间和： <a href=#%e5%8c%ba%e9%97%b4%e5%92%8c class=anchor aria-hidden=true>#</a></h2><p>如果数据比较小，就是前缀和和差分的问题。但是这个问题的数据量比较大，而且有负数。</p><p>这个问题，是插入的数量比较小。虽然跨度有10亿个，但是查询和插入的数量都是十万不到。所以需要离散化。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+typedef pair&lt;int, int&gt; PII;
+
+const int N = 300010;
+
+int n,m;
+int a[N], s[N];
+
+vector&lt;int&gt; alls;
+vector&lt;PII&gt; add, query;
+
+int find(int x)
+{
+    int l = 0, r = alls.size() - 1;
+    while (l &lt; r)
+    {
+        int mid = l + r &gt;&gt; 1;
+        if (alls[mid] &gt;= x) r = mid;
+        else l = mid + 1;
+    }
+    
+    return r + 1; 
+}
+
+int main() {
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    for(int i = 0; i &lt; n; ++ i )
+    {
+        int x, c;
+        cin &gt;&gt; x &gt;&gt; c;
+        add.push_back({x,c});
+        
+        alls.push_back(x);
+    }
+    
+    for(int i = 0; i &lt; m; ++ i)
+    {
+        int l, r;
+        cin &gt;&gt; l &gt;&gt; r;
+        query.push_back(make_pair(l,r));
+        
+        alls.push_back(l);
+        alls.push_back(r);
+    }
+    
+    sort(alls.begin(), alls.end());
+    alls.erase(unique(alls.begin(), alls.end()), alls.end());
+    
+    for(auto item : add) 
+    {
+        int x = find(item.first);
+        a[x] += item.second;
+    }
+        
+    for (int i = 1; i &lt;= alls.size(); ++ i) s[i] = s[i - 1] + a[i];
+    
+    for (auto item: query)
+    {
+        int l = find(item.first), r = find(item.second);
+        cout &lt;&lt; s[r] - s[l - 1] &lt;&lt; endl;
+        
+    }
+    return 0;
+    
+}
+</code></pre><h1 id=区间合并>区间合并 <a href=#%e5%8c%ba%e9%97%b4%e5%90%88%e5%b9%b6 class=anchor aria-hidden=true>#</a></h1><p>把有重叠点的区间合并</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_500x0_resize_box_3.png 500w" width=918 height=452 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_01/img11_huf6171abd2fc902ce23ae737aaf28d2d8_80221_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_01/img11.png width=918 height=452 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+const int N = 200010; 
+
+typedef pair&lt;int, int&gt; PII;
+
+vector&lt;PII&gt; segs;
+int n;
+
+void merge(vector&lt;PII&gt; &amp; segs)
+{
+    vector&lt;PII&gt; res;
+    
+    sort(segs.begin(), segs.end()); //先排first，再排second
+    
+    int st = -2e9, ed = -2e9; //st = start, ed = end
+    
+    for(auto seg : segs)
+    {
+        if (ed &lt; seg.first)  
+        {
+            if (st != -2e9) res.push_back({st, ed});
+            st = seg.first, ed = seg.second;
+        }
+        else 
+        {
+            ed = max(ed, seg.second);
+        }
+    }
+    if (st != -2e9) res.push_back({st, ed});
+    
+    segs = res;
+}
+
+int main()
+{
+    cin &gt;&gt; n;    
+    
+    for (int i = 0; i &lt; n; ++ i)
+    {
+        int l, r;
+        cin &gt;&gt; l &gt;&gt; r;
+        segs.push_back({l, r});
+    }
+    
+    merge(segs);
+    
+    cout &lt;&lt; segs.size() &lt;&lt; endl;
+    
+    return 0;
+}
+</code></pre><div class="docs-navigation d-flex justify-content-between"><a class=ms-auto href=https://notes.ming.ac/docs/algorithm/algorithm_02/><div class="card my-1"><div class="card-body py-2">「Algorithm」02 Data Structure &rarr;</div></div></a></div></main></div></div></div><footer class="footer text-muted"><div class=container-xxl><div class=row><div class="col-lg-8 order-last order-lg-first"><ul class=list-inline><li class=list-inline-item></li></ul></div><div class="col-lg-8 order-first order-lg-last text-lg-end"><ul class=list-inline></ul></div></div></div></footer><script src=https://notes.ming.ac/js/bootstrap.min.592b9faf6c83a2bda564a377cf82f9a67546b198510a93fdb0728f9622ec22729d44be02fb2ea16c3fe5365ae1806259cd111932ca28e68b66462d6937635bab.js integrity="sha512-WSufr2yDor2lZKN3z4L5pnVGsZhRCpP9sHKPliLsInKdRL4C+y6hbD/lNlrhgGJZzREZMsoo5otmRi1pN2Nbqw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/highlight.min.e13cfba4c5524e30386cb9ea71f0f191f39d15b25b222f4b67549689f7c076158f42a2282446044f5cdacc76a6d003efbfa252a84aea0116703803b6339ae35f.js integrity="sha512-4Tz7pMVSTjA4bLnqcfDxkfOdFbJbIi9LZ1SWiffAdhWPQqIoJEYET1zazHam0APvv6JSqErqARZwOAO2M5rjXw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/vendor/katex/dist/katex.min.849bcb0a26d9f709f5e2355f5188d1c21e07bb04544918a1c2a6d290dc2ebcb9b787ba92911f609242c898b7ce8009c541be9153a357e673818164f829d917fe.js integrity="sha512-hJvLCibZ9wn14jVfUYjRwh4HuwRUSRihwqbSkNwuvLm3h7qSkR9gkkLImLfOgAnFQb6RU6NX5nOBgWT4KdkX/g==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/vendor/katex/dist/contrib/auto-render.min.916823ec103cf367b71e28a6f01513cb9c3ac6708ccb5229402ec46b8e30a8b25003db694df35d80e9dd666a371f327c6152790617b6256390c164109a90bd4c.js integrity="sha512-kWgj7BA882e3Hiim8BUTy5w6xnCMy1IpQC7Ea44wqLJQA9tpTfNdgOndZmo3HzJ8YVJ5Bhe2JWOQwWQQmpC9TA==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/main.min.647c6f9869eb8e24d3f5183f467970dbadd12adeec725e66830376db069558e917e21eb7dd363563443d2c91c5c6557ea3b2864d1f2a78c3f65e676fa19b961b.js integrity="sha512-ZHxvmGnrjiTT9Rg/Rnlw263RKt7scl5mgwN22waVWOkX4h633TY1Y0Q9LJHFxlV+o7KGTR8qeMP2XmdvoZuWGw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/index.min.ebc1952e74968a3243e9196c211f191dad8afc336432177a2b0d4d78f7582a89202ce07d932418c8d4f4da3c353bc10807ac349bb9ed79bb6835068f61dde914.js integrity="sha512-68GVLnSWijJD6RlsIR8ZHa2K/DNkMhd6Kw1NePdYKokgLOB9kyQYyNT02jw1O8EIB6w0m7ntebtoNQaPYd3pFA==" crossorigin=anonymous defer></script></body></html>

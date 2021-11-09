@@ -1,0 +1,923 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=preload as=font href=https://notes.ming.ac/fonts/vendor/jost/jost-v4-latin-regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/vendor/jost/jost-v4-latin-700.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/KaTeX_Main-Regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/KaTeX_Math-Italic.woff2 type=font/woff2 crossorigin><script>(()=>{var b=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,a=localStorage.getItem("theme");b&&a===null&&(localStorage.setItem("theme","dark"),document.documentElement.setAttribute("data-dark-mode","")),b&&a==="dark"&&document.documentElement.setAttribute("data-dark-mode",""),a==="dark"&&document.documentElement.setAttribute("data-dark-mode","")})()</script><link rel=stylesheet href=https://notes.ming.ac/main.d4f02be82ed3a1bdb879afde3c6fe0915a9d87f60828ae6f3b2cef795fdb1f4d0c22526ee53dd6ea9cafb09336894a8b3e46dd9a0c83c990e3c30dd1c014195e.css integrity="sha512-1PAr6C7Tob24ea/ePG/gkVqdh/YIKK5vOyzveV/bH00MIlJu5T3W6pyvsJM2iUqLPkbdmgyDyZDjww3RwBQZXg==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><meta name=robots content="index, follow"><meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>「Algorithm」02 Data Structure | Ming Notes</title><meta name=description content="链表与邻接表：树与图的存储 栈与队列：单调队列、单调栈 kmp Trie 并查集 堆 Hash表  链表与邻接表：树与图的存储 # 用数组来模拟这些结构，不适用struct和STL。目的是为了提高效率
+struct Node { int val; Node * next; }; Node * p = new Node();  面试题较多，但是new一个节点是比较慢的，做题不需要。
+用数组模拟单链表 # 最常用的邻接表，存储图和树。它们都是用邻接表存储的。
+  以上是用数组e[N]和数组ne[N]来模拟单链表，如果是不存在，那么取-1。
+#include&amp;lt;iostream&amp;gt; using namespace std; const int N = 1e5 + 10; // head 表示头结点的下标 // e[i]是节点i的值 // ne[i] 是节点i的next指针 // idx是一个指针，指向当前用到的点。 int head, e[N], ne[N], idx; void init() { head = -1; idx = 0; } //将x插入到头结点 void add_to_head(int x) { e[idx] = x, ne[idx] = head, head = idx, idx ++; } //将x插入到下标是k的点的后面 void add(int k, int x) { e[idx] = x, ne[idx] = ne[k], ne[k] = idx, idx ++; } //删除k后面的节点 void remove(int k) { ne[k] = ne[ne[k]]; } int main() { int m; cin &amp;gt;&amp;gt; m; init(); while ( m --) { int k, x; char op; cin &amp;gt;&amp;gt; op; if (op == 'H') { cin &amp;gt;&amp;gt; x; add_to_head(x); } else if( op == 'D') { cin &amp;gt;&amp;gt; k; if (k == 0) head = ne[head]; else remove(k - 1); }else { cin &amp;gt;&amp;gt; k &amp;gt;&amp;gt; x; add(k - 1, x); } } for (int i = head; i !"><link rel=canonical href=https://notes.ming.ac/docs/algorithm/algorithm_02/><meta property="og:locale" content="en_US"><meta property="og:type" content="article"><meta property="og:title" content="「Algorithm」02 Data Structure"><meta property="og:description" content="链表与邻接表：树与图的存储 栈与队列：单调队列、单调栈 kmp Trie 并查集 堆 Hash表  链表与邻接表：树与图的存储 # 用数组来模拟这些结构，不适用struct和STL。目的是为了提高效率
+struct Node { int val; Node * next; }; Node * p = new Node();  面试题较多，但是new一个节点是比较慢的，做题不需要。
+用数组模拟单链表 # 最常用的邻接表，存储图和树。它们都是用邻接表存储的。
+  以上是用数组e[N]和数组ne[N]来模拟单链表，如果是不存在，那么取-1。
+#include<iostream> using namespace std; const int N = 1e5 + 10; // head 表示头结点的下标 // e[i]是节点i的值 // ne[i] 是节点i的next指针 // idx是一个指针，指向当前用到的点。 int head, e[N], ne[N], idx; void init() { head = -1; idx = 0; } //将x插入到头结点 void add_to_head(int x) { e[idx] = x, ne[idx] = head, head = idx, idx ++; } //将x插入到下标是k的点的后面 void add(int k, int x) { e[idx] = x, ne[idx] = ne[k], ne[k] = idx, idx ++; } //删除k后面的节点 void remove(int k) { ne[k] = ne[ne[k]]; } int main() { int m; cin >> m; init(); while ( m --) { int k, x; char op; cin >> op; if (op == 'H') { cin >> x; add_to_head(x); } else if( op == 'D') { cin >> k; if (k == 0) head = ne[head]; else remove(k - 1); }else { cin >> k >> x; add(k - 1, x); } } for (int i = head; i !"><meta property="og:url" content="https://notes.ming.ac/docs/algorithm/algorithm_02/"><meta property="og:site_name" content="Ming Notes"><meta property="article:published_time" content="2021-11-09T12:35:01+08:00"><meta property="article:modified_time" content="2021-11-09T12:35:01+08:00"><meta property="og:image" content="https://notes.ming.ac/doks.png"><meta property="og:image:alt" content="Ming Notes"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content><meta name=twitter:creator content><meta name=twitter:title content="「Algorithm」02 Data Structure"><meta name=twitter:description content><meta name=twitter:image content="https://notes.ming.ac/doks.png"><meta name=twitter:image:alt content="「Algorithm」02 Data Structure"><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://notes.ming.ac/#/schema/organization/1","name":"Notes","url":"https://notes.ming.ac/","sameAs":["https://twitter.com/guomingming9","https://github.com/imingx/note"],"logo":{"@type":"ImageObject","@id":"https://notes.ming.ac/#/schema/image/1","url":"https://notes.ming.ac/logo-doks.png","width":512,"height":512,"caption":"Notes"},"image":{"@id":"https://notes.ming.ac/#/schema/image/1"}},{"@type":"WebSite","@id":"https://notes.ming.ac/#/schema/website/1","url":"https://notes.ming.ac/","name":"Ming Notes","description":"存放笔记的地方","publisher":{"@id":"https://notes.ming.ac/#/schema/organization/1"}},{"@type":"WebPage","@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/","url":"https://notes.ming.ac/docs/algorithm/algorithm_02/","name":"「Algorithm」02 Data Structure","description":"","isPartOf":{"@id":"https://notes.ming.ac/#/schema/website/1"},"about":{"@id":"https://notes.ming.ac/#/schema/organization/1"},"datePublished":"2021-11-09T12:35:01CET","dateModified":"2021-11-09T12:35:01CET","breadcrumb":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/#/schema/breadcrumb/1"},"primaryImageOfPage":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/#/schema/image/2"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://notes.ming.ac/docs/algorithm/algorithm_02/"]}]},{"@type":"BreadcrumbList","@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/#/schema/breadcrumb/1","name":"Breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://notes.ming.ac","url":"https://notes.ming.ac","name":"Home"}},{"@type":"ListItem","position":3,"item":{"@type":"WebPage","@id":"https://notes.ming.ac/docs/","url":"https://notes.ming.ac/docs/","name":"Docs"}},{"@type":"ListItem","position":4,"item":{"@type":"WebPage","@id":"https://notes.ming.ac/docs/algorithm/","url":"https://notes.ming.ac/docs/algorithm/","name":"Algorithm"}},{"@type":"ListItem","position":5,"item":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/"}}]},{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://notes.ming.ac/#/schema/article/1","headline":"「Algorithm」02 Data Structure","description":"","isPartOf":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/"},"mainEntityOfPage":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/"},"datePublished":"2021-11-09T12:35:01CET","dateModified":"2021-11-09T12:35:01CET","author":{"@id":"https://notes.ming.ac/#/schema/person/2"},"publisher":{"@id":"https://notes.ming.ac/#/schema/organization/1"},"image":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/#/schema/image/2"}}]},{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://notes.ming.ac/#/schema/person/2","name":"gmm","sameAs":["https://twitter.com/guomingming9","https://github.com/imingx"]}]},{"@context":"https://schema.org","@graph":[{"@type":"ImageObject","@id":"https://notes.ming.ac/docs/algorithm/algorithm_02/#/schema/image/2","url":"https://notes.ming.ac/doks.png","contentUrl":"https://notes.ming.ac/doks.png","caption":"「Algorithm」02 Data Structure"}]}]}</script><meta name=theme-color content="#fff"><link rel=apple-touch-icon sizes=180x180 href=https://notes.ming.ac/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://notes.ming.ac/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://notes.ming.ac/favicon-16x16.png><link rel=manifest crossorigin=use-credentials href=https://notes.ming.ac/site.webmanifest></head><body class="docs single"><div class=header-bar></div><header class="navbar navbar-expand-md navbar-light doks-navbar"><nav class="container-xxl flex-wrap flex-md-nowrap" aria-label="Main navigation"><a class="navbar-brand p-0 me-auto" href=https://notes.ming.ac/ aria-label="Ming Notes">Ming Notes</a>
+<button class="btn btn-menu d-block d-md-none order-5" type=button data-bs-toggle=offcanvas data-bs-target=#offcanvasDoks aria-controls=offcanvasDoks aria-label="Open main menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button><div class="offcanvas offcanvas-start border-0 py-md-1" tabindex=-1 id=offcanvasDoks data-bs-backdrop=true aria-labelledby=offcanvasDoksLabel><div class="header-bar d-md-none"></div><div class="offcanvas-header d-md-none"><h2 class="h5 offcanvas-title ps-2" id=offcanvasDoksLabel><a class=text-dark href=https://notes.ming.ac/>Ming Notes</a></h2><button type=button class="btn-close text-reset me-2" data-bs-dismiss=offcanvas aria-label="Close main menu"></button></div><div class="offcanvas-body px-4"><h3 class="h6 text-uppercase mb-3 d-md-none">Main</h3><ul class="nav flex-column flex-md-row ms-md-n3"><li class=nav-item><a class="nav-link ps-0 py-1 active" href=https://notes.ming.ac/docs/prologue/introduction/>Docs</a></li><li class=nav-item><a class="nav-link ps-0 py-1" href=https://www.ming.ac>Blog</a></li></ul><hr class="text-black-50 my-4 d-md-none"><h3 class="h6 text-uppercase mb-3 d-md-none">Socials</h3><ul class="nav flex-column flex-md-row ms-md-auto me-md-n5 pe-md-2"><li class=nav-item><a class="nav-link ps-0 py-1" href=https://github.com/imingx><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg><small class="ms-2 d-md-none">GitHub</small></a></li></ul></div></div><button id=mode class="btn btn-link order-md-1" type=button aria-label="Toggle user interface mode">
+<span class=toggle-dark><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span><span class=toggle-light><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button></nav></header><nav class="doks-subnavbar py-2 sticky-lg-top" aria-label="Secondary navigation"><div class="container-xxl d-flex align-items-md-center"><form class="doks-search position-relative flex-grow-1 me-auto"><input id=search class="form-control is-search" type=search placeholder="Search docs..." aria-label="Search docs..." autocomplete=off><div id=suggestions class="shadow bg-white rounded d-none"></div></form><button class="btn doks-sidebar-toggle d-lg-none ms-3 order-3 collapsed" type=button data-bs-toggle=collapse data-bs-target=#doks-docs-nav aria-controls=doks-docs-nav aria-expanded=false aria-label="Toggle documentation navigation"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="doks doks-expand" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Expand</title><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="doks doks-collapse" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Collapse</title><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg></button></div></nav><div class=container-xxl><aside class=doks-sidebar><nav id=doks-docs-nav class="collapse d-lg-none" aria-label="Tertiary navigation"><ul class="list-unstyled collapsible-sidebar"><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-prologue aria-expanded=false>
+Prologue</button><div class=collapse id=section-prologue><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/introduction/>Introduction</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/commands/>Commands</a></li></ul></div></li><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-algorithm aria-expanded=true>
+algorithm</button><div class="collapse show" id=section-algorithm><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_01/>「Algorithm」01 基础算法</a></li><li><a class="docs-link rounded active" href=https://notes.ming.ac/docs/algorithm/algorithm_02/>「Algorithm」02 Data Structure</a></li></ul></div></li></ul></nav></aside></div><div class="wrap container-xxl" role=document><div class=content><div class="row flex-xl-nowrap"><div class="col-lg-5 col-xl-4 docs-sidebar d-none d-lg-block"><nav class=docs-links aria-label="Main navigation"><ul class="list-unstyled collapsible-sidebar"><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-prologue aria-expanded=false>
+Prologue</button><div class=collapse id=section-prologue><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/introduction/>Introduction</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/commands/>Commands</a></li></ul></div></li><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-algorithm aria-expanded=true>
+algorithm</button><div class="collapse show" id=section-algorithm><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_01/>「Algorithm」01 基础算法</a></li><li><a class="docs-link rounded active" href=https://notes.ming.ac/docs/algorithm/algorithm_02/>「Algorithm」02 Data Structure</a></li></ul></div></li></ul></nav></div><nav class="docs-toc d-none d-xl-block col-xl-3" aria-label="Secondary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#链表与邻接表树与图的存储>链表与邻接表：树与图的存储</a><ul><li><a href=#用数组模拟单链表>用数组模拟单链表</a></li><li><a href=#用数组模拟双链表>用数组模拟双链表</a></li></ul></li><li><a href=#栈与队列>栈与队列</a><ul><li><a href=#单调栈>单调栈：</a></li><li><a href=#单调队列>单调队列</a></li></ul></li><li><a href=#kmp>KMP</a></li><li><a href=#trie树>Trie树</a></li><li><a href=#并查集>并查集</a></li><li><a href=#堆>堆</a></li><li><a href=#hash表>Hash表</a></li><li><a href=#cstl使用>C++STL使用</a><ul><li><a href=#vector>vector:</a></li><li><a href=#下面是模板>下面是模板</a></li></ul></li></ul></nav></div></nav><main class="docs-content col-lg-11 col-xl-9"><h1>「Algorithm」02 Data Structure</h1><p class=lead></p><nav class=d-xl-none aria-label="Quaternary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#链表与邻接表树与图的存储>链表与邻接表：树与图的存储</a><ul><li><a href=#用数组模拟单链表>用数组模拟单链表</a></li><li><a href=#用数组模拟双链表>用数组模拟双链表</a></li></ul></li><li><a href=#栈与队列>栈与队列</a><ul><li><a href=#单调栈>单调栈：</a></li><li><a href=#单调队列>单调队列</a></li></ul></li><li><a href=#kmp>KMP</a></li><li><a href=#trie树>Trie树</a></li><li><a href=#并查集>并查集</a></li><li><a href=#堆>堆</a></li><li><a href=#hash表>Hash表</a></li><li><a href=#cstl使用>C++STL使用</a><ul><li><a href=#vector>vector:</a></li><li><a href=#下面是模板>下面是模板</a></li></ul></li></ul></nav></div></nav><ul><li>链表与邻接表：树与图的存储</li><li>栈与队列：单调队列、单调栈</li><li>kmp</li><li>Trie</li><li>并查集</li><li>堆</li><li>Hash表</li></ul><h1 id=链表与邻接表树与图的存储>链表与邻接表：树与图的存储 <a href=#%e9%93%be%e8%a1%a8%e4%b8%8e%e9%82%bb%e6%8e%a5%e8%a1%a8%e6%a0%91%e4%b8%8e%e5%9b%be%e7%9a%84%e5%ad%98%e5%82%a8 class=anchor aria-hidden=true>#</a></h1><p>用数组来模拟这些结构，不适用struct和STL。目的是为了提高效率</p><pre><code class=language-cpp>struct Node
+{
+		int val;
+		Node * next;
+};
+
+Node * p = new Node();
+</code></pre><p>面试题较多，但是new一个节点是比较慢的，做题不需要。</p><h2 id=用数组模拟单链表>用数组模拟单链表 <a href=#%e7%94%a8%e6%95%b0%e7%bb%84%e6%a8%a1%e6%8b%9f%e5%8d%95%e9%93%be%e8%a1%a8 class=anchor aria-hidden=true>#</a></h2><p>最常用的邻接表，存储图和树。它们都是用邻接表存储的。</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_500x0_resize_box_3.png 500w" width=571 height=189 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img1_hud0b792d155512f548831497d8c3ef732_29861_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img1.png width=571 height=189 alt=Untitled></noscript></figure></p><p>以上是用数组e[N]和数组ne[N]来模拟单链表，如果是不存在，那么取-1。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std; 
+
+const int N = 1e5 + 10;
+
+// head 表示头结点的下标
+// e[i]是节点i的值
+// ne[i] 是节点i的next指针
+// idx是一个指针，指向当前用到的点。
+int head, e[N], ne[N], idx;
+
+void init()
+{
+    head = -1;
+    idx = 0;    
+}
+
+//将x插入到头结点
+void add_to_head(int x)
+{
+    e[idx] = x, ne[idx] = head, head = idx, idx ++;
+}
+
+//将x插入到下标是k的点的后面
+void add(int k, int x)
+{
+    e[idx] = x, ne[idx] = ne[k], ne[k] = idx, idx ++;   
+}
+
+//删除k后面的节点
+void remove(int k)
+{
+    ne[k] = ne[ne[k]];
+}
+
+int main()
+{
+    int m;
+    cin &gt;&gt; m;
+    
+    init();
+    while ( m --)
+    {
+        int k, x;
+        char op;
+        
+        cin &gt;&gt; op;
+        if (op == 'H')
+        {
+            cin &gt;&gt; x;
+            add_to_head(x);
+        }
+        else if( op ==  'D')
+        {
+            cin &gt;&gt; k;
+            if (k == 0) head = ne[head];
+            else remove(k - 1);
+        }else {
+            cin &gt;&gt; k &gt;&gt; x;
+            add(k - 1, x);
+        }
+    }
+    
+    for (int i = head; i != -1; i = ne[i])
+        cout &lt;&lt; e[i] &lt;&lt; &quot; &quot;;
+    
+ 
+    return 0;   
+}
+</code></pre><h2 id=用数组模拟双链表>用数组模拟双链表 <a href=#%e7%94%a8%e6%95%b0%e7%bb%84%e6%a8%a1%e6%8b%9f%e5%8f%8c%e9%93%be%e8%a1%a8 class=anchor aria-hidden=true>#</a></h2><p>用来优化某些问题。</p><p>int l[N], r[N];，让0是head，1是tail</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_500x0_resize_box_3.png 500w" width=948 height=536 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img2_hu5a73a0b470a51d9cc8be9f44781aab9a_103255_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img2.png width=948 height=536 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 100010;
+
+int m;
+int e[N], l[N], r[N], idx;
+
+void init()
+{
+    //0表示左端点，1表示右端点
+    r[0] = 1;
+    l[1] = 0;
+    idx = 2;
+}
+
+void add(int k, int x)
+{
+    //在k的右边插入x
+    e[idx] = x;
+    r[idx] = r[k];
+    l[idx] = k;
+    
+    l[r[k]] = idx;
+    r[k] = idx;
+
+    idx ++;
+    //如果想插入左边，只要add(l[k], x)
+}
+
+void remove(int k)
+{
+    r[l[k]] = r[k];
+    l[r[k]] = l[k];
+}
+
+int main() 
+{
+    cin &gt;&gt; m;
+    
+    
+    
+}
+</code></pre><p>邻接表，就是n个单链表.</p><h1 id=栈与队列>栈与队列 <a href=#%e6%a0%88%e4%b8%8e%e9%98%9f%e5%88%97 class=anchor aria-hidden=true>#</a></h1><p>栈就是先进后出。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 100010;
+
+int stk[N], tt;
+
+int main()
+{
+    初始化
+    //tt = -1; 
+    
+    入栈
+    //stk[ ++ tt] = x;
+    
+    出栈
+    // return stk[tt --];
+    
+    空
+    //if (tt &gt;= 0) return true;
+    //else return false;
+    
+    栈顶
+    //stk[tt];
+}
+
+实际上，令tt = 0初始化，更简洁。
+
+判空时，只要 if (tt &gt; 0) return true; // if(tt) return true;
+					else return false;
+</code></pre><p>队列：</p><pre><code class=language-cpp>
+int q[N], hh = 0, tt = -1; //hh是队头， tt是队尾。队尾插入，队头弹出
+
+//插入
+q[ ++ tt] = x;
+
+//弹出：
+return q[hh ++];
+
+if( hh &lt;= tt) not empty;
+else empty;
+
+取出队头队尾元素：
+return q[hh];
+return q[tt];
+</code></pre><p>考验记忆力和毅力（自制力）。</p><h2 id=单调栈>单调栈： <a href=#%e5%8d%95%e8%b0%83%e6%a0%88 class=anchor aria-hidden=true>#</a></h2><p>给定一个序列，求序列中的每一个数，离他最近的左边比他小的数。否则为-1。</p><p>我们设置一个栈，对于每个x，之前的元素，应该让stk[tt] ≥ x的都出栈。</p><p>这样x再入栈，就是一个单调递增的栈序列。而找到最小的，只要找到x入栈前的栈顶即可。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+int n;
+int stk[N], tt;
+
+int main()
+{
+    cin &gt;&gt; n;
+    
+    for(int i = 0; i &lt; n; ++ i)
+    {
+        int x;
+        cin &gt;&gt; x;
+        while(tt &amp;&amp; stk[tt] &gt;= x) tt --;
+        if (tt) cout &lt;&lt; stk[tt] &lt;&lt; &quot; &quot;;
+        else cout &lt;&lt; -1 &lt;&lt; &quot; &quot;;
+        
+        stk[++tt] = x;
+    }
+    
+    
+    return 0;
+}
+//这个算法，每个元素都最多入栈和出栈一次，所以复杂度是O（n）
+</code></pre><h2 id=单调队列>单调队列 <a href=#%e5%8d%95%e8%b0%83%e9%98%9f%e5%88%97 class=anchor aria-hidden=true>#</a></h2><p><a href=https://www.acwing.com/problem/content/156/>https://www.acwing.com/problem/content/156/</a>滑动窗口</p><p>一个序列，在一个窗口内，算出其最大值和最小值，窗口逐渐向右移动。</p><p>在一个窗口内，如果右边的元素比左边的元素小，</p><ol><li>首先考虑暴力怎么做。</li><li>然后考虑在窗口移动的时候，怎样删除一些无用的元素。</li></ol><p>如果不开O2优化，那么数组比STL快一些。</p><p>O3优化</p><pre><code class=language-cpp>#pragma GCC optimize(2)
+</code></pre><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_500x0_resize_box_3.png 500w" width=1004 height=432 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img3_hu9dce7192a3a6a38dfbd3db2c7bfeab61_63441_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img3.png width=1004 height=432 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 1e6 + 10;
+
+int a[N], q[N];
+//q是下标，也就是队列，a只是记录的值a[q[i]]是取下标的值。
+int n, k;
+
+int main()
+{
+    cin &gt;&gt; n &gt;&gt; k;
+    for(int i = 0; i &lt; n; ++ i)
+    {
+        scanf(&quot;%d&quot;, &amp;a[i]);
+    }
+    
+    
+    int hh = 0, tt = -1;
+    for(int i = 0; i &lt; n; i ++)
+    {
+        //判断队头是否已经出窗口
+        if (hh &lt;= tt &amp;&amp; i - k + 1 &gt; q[hh])
+        {
+            ++ hh;
+        }
+        
+        //形成一个单调递增的序列。
+        while(hh &lt;= tt &amp;&amp; a[q[tt]] &gt;= a[i])
+            tt --;
+        q[++tt] = i;
+        if (i &gt;= k - 1) printf(&quot;%d &quot;, a[q[hh]]);
+    }
+    
+    puts(&quot;&quot;);
+    hh = 0, tt = -1;
+    for(int i = 0; i &lt; n; ++ i)
+    {
+        if( hh &lt;= tt &amp;&amp; i - q[hh] + 1 &gt; k)
+            ++ hh;
+        while( hh &lt;= tt &amp;&amp; a[q[tt]] &lt;= a[i])
+            tt --;
+         q[++tt] = i;
+        if (i &gt;= k - 1) printf(&quot;%d &quot;, a[q[hh]]);
+       
+    }   
+}
+</code></pre><h1 id=kmp>KMP <a href=#kmp class=anchor aria-hidden=true>#</a></h1><ol><li>暴力算法怎么做？</li><li>如何去优化。</li></ol><p>朴素算法：</p><blockquote><p>S[N]→ p[M]
+for(int i = 1; i ≤ n; ++i)</p><p>bool flag = true;</p><p>int t = i;</p><p>for(int j = 1; j ≤ m; j++, t++)</p><p>if (s[t] ≠ p[j])</p><p>{</p><p>flag = false;</p><p>break;</p><p>}</p></blockquote><p>KMP解释（以1开始）</p><p>next数组表示，next[i] = j，表示p[1, j] = p[ i - j + 1, i]</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_500x0_resize_box_3.png 500w" width=750 height=440 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img4_huf88eacab1919db3b17c81887e2db2d54_125518_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img4.png width=750 height=440 alt=Untitled></noscript></figure></p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_500x0_resize_box_3.png 500w" width=1044 height=678 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img5_hue72649ef51ee83b37f5682f830859873_219017_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img5.png width=1044 height=678 alt=Untitled></noscript></figure></p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_500x0_resize_box_3.png 500w" width=1026 height=802 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img6_hu9bd3301078d94ea48ad657a848e9dc39_244071_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img6.png width=1026 height=802 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+
+using namespace std;
+
+const int N = 100010, M = 1000010;
+
+int n, m;
+char p[N], s[M];
+int ne[N];
+
+int main() {
+    cin &gt;&gt; n &gt;&gt; p + 1 &gt;&gt; m &gt;&gt; s + 1; 
+    //index from 1    
+    
+    // 求Next
+    for(int i = 2, j = 0; i &lt;= n; ++ i)
+    {
+//每次都比较 j+1与i，到最后之前，可以保证1-j已经是匹配的。除非j = 0
+        while(j &amp;&amp; p[i] != p[ j + 1]) j = ne[j];
+        if(p[i] == p[j+1]) j++;
+        ne[i] = j;
+        //前j个（1-j）的元素与[i-j +1, i]的元素匹配，所以ne[i] = j
+    }
+    
+    
+    for(int i = 1, j = 0; i &lt;=m ; ++ i)
+    {
+        while(j &amp;&amp; s[i] != p[ j + 1]) j = ne[j];
+        
+        if( s[i] == p[j+1]) j++;
+        if(j == n)//前n个元素已经匹配
+        {
+            //匹配成功
+            printf(&quot;%d &quot;, i - n );
+            j = ne[j];
+        }
+    }
+    
+    
+    return 0;
+}
+</code></pre><h1 id=trie树>Trie树 <a href=#trie%e6%a0%91 class=anchor aria-hidden=true>#</a></h1><p>高效地存储和查找字符串，集合的数据结构</p><p>比如：</p><blockquote><p>abcdef
+abdef
+aced
+bcdf
+bcff
+cdaa
+dcdc</p></blockquote><p>当数量过大，可以使用二进制来表示。比如考虑汉字，直接找其二进制100000101010,每一步仅考虑1和0.</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_500x0_resize_box_3.png 500w" width=1100 height=486 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img7_hua06694bdefb3606fc73f4789b0bad6a6_117292_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img7.png width=1100 height=486 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+
+using namespace std;
+
+const int N = 100010;
+
+int son[N][26], cnt[N], idx;
+//下标是0的点，既是根节点，又是空节点
+char str[N];
+
+void insert(char str[])
+{
+    int p = 0;
+    for(int i = 0; str[i]; ++i){
+        int u = str[i] - 'a';   
+        if (!son[p][u]) son[p][u] = ++ idx;
+        p = son[p][u];
+    }
+    cnt[p] ++;
+}
+
+int query(char str[])
+{
+    int p = 0;
+    for(int i = 0; str[i]; ++i)
+    {
+        int u = str[i] - 'a';
+        if(!son[p][u]) return 0;
+        p = son[p][u];
+    }
+    return cnt[p];
+}
+
+int main()
+{
+    int n;
+    cin &gt;&gt; n;
+    while(n--)
+    {
+        char op[2];
+        cin &gt;&gt; op &gt;&gt; str;
+        if (op[0] == 'I') insert(str);
+        else cout &lt;&lt; query(str) &lt;&lt; endl;
+    }
+    return 0;
+}
+</code></pre><h1 id=并查集>并查集 <a href=#%e5%b9%b6%e6%9f%a5%e9%9b%86 class=anchor aria-hidden=true>#</a></h1><p>面试和比赛，非常容易出的数据结构。</p><p>用来快速的处理：</p><ol><li>将两个集合合并</li><li>询问两个元素是否在一个集合当中</li></ol><p>belong[x] = a，存储x属于集合a。</p><p>近乎O（1）的支持上面的两个操作。</p><p><img class="img-fluid lazyload blur-up" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img8_hu882418cb04ef9e711e5f1c8926c91121_35833_20x0_resize_box_3.png data-src=https://notes.ming.ac/docs/algorithm/algorithm_02/img8.png width=256 height=404 alt=Untitled></p><p>基本原理：每个集合用一棵树来表示，树根的编号就是整个集合的编号，每个节点存储它的父节点，p[x] 表示父节点。</p><ul><li>问题1： 如何判断树根 p<input checked disabled type=checkbox> == x, x就是集合的编号</li><li>问题2：如何求x的集合编号，while(p<input checked disabled type=checkbox> ! = x) x = p<input checked disabled type=checkbox></li><li>问题3：如何合并两个集合：假设px是x的集合的编号，py是y的集合的编号，那么p<input checked disabled type=checkbox> = y;</li></ul><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_500x0_resize_box_3.png 500w" width=904 height=276 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img9_hu524d49c81f0da3505709855275552235_55795_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img9.png width=904 height=276 alt=Untitled></noscript></figure></p><p>并查集的优化：</p><ul><li>（路径压缩）, 每次查询其父节点，只要直接指向其祖宗节点。</li></ul><p>合并集合</p><p><a href=https://www.acwing.com/problem/content/838/>https://www.acwing.com/problem/content/838/</a></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+int p[N];
+int n, m;
+
+int find(int x) //返回x的祖宗节点，加上路径压缩
+{
+    if(p[x] != x) p[x] = find(p[x]);
+    return p[x];
+}
+
+int main()
+{
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    for(int i = 1; i &lt;=n ; ++ i) p[i] = i;
+    
+    while(m --)
+    {
+        char op[2];
+//建议读入一个字符，也要使用字符串，自动过滤空格和回车
+        int a, b;
+        cin &gt;&gt; op &gt;&gt; a &gt;&gt; b;
+        if(op[0] == 'M') p[find(a)] = find(b);
+        else {
+            if(find(a) == find(b)) puts(&quot;Yes&quot;);
+            else puts(&quot;No&quot;);
+        }
+    }
+    
+}
+</code></pre><p>连通块中点的数量<a href=https://www.acwing.com/problem/content/839/>https://www.acwing.com/problem/content/839/</a></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+//如何查询每个联通块的数量？维护根节点的size即可。
+int p[N], siz[N];
+int n, m;
+
+int find(int x) //返回x的祖宗节点，加上路径压缩
+{
+    if(p[x] != x) p[x] = find(p[x]);
+    return p[x];
+}
+
+int main()
+{
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    for(int i = 1; i &lt;=n ; ++ i) {
+        p[i] = i;
+        siz[i] = 1;
+    }
+    
+    while(m --)
+    {
+        char op[5];
+//建议读入一个字符，也要使用字符串，自动过滤空格和回车
+        int a, b;
+        cin &gt;&gt; op;
+        if(op[0] == 'C')
+        {
+            cin &gt;&gt; a &gt;&gt; b;
+            if(find(a) != find(b))
+                siz[find(b)] += siz[find(a)];
+            p[find(a)] = find(b);
+            
+        } else if (op[1] == '1')
+        {
+            cin &gt;&gt; a &gt;&gt; b;
+            if(find(a) == find(b)) puts(&quot;Yes&quot;);
+            else puts(&quot;No&quot;);
+        } else
+        {
+            cin &gt;&gt; a;
+            cout &lt;&lt; siz[find(a)] &lt;&lt; endl;
+        }
+        
+    }
+    
+}
+</code></pre><h1 id=堆>堆 <a href=#%e5%a0%86 class=anchor aria-hidden=true>#</a></h1><p>如何手写一个堆？</p><ol><li>插入一个数</li><li>求集合当中的最小值</li><li>删除最小值</li><li>删除任意一个元素</li><li>修改任意一个元素</li></ol><p>堆的基本结构：</p><p>是一棵二叉树。是一棵完全二叉树。</p><p>以小顶堆为例，每个节点的左右子节点都大于该节点的值。</p><p>使用一个一维数组存放堆。</p><p>1号点是根节点，x的左儿子是2x，右子节点是2x+1。</p><p>操作：</p><ul><li>down(x)，往下调整x。每次找这个节点和两个子节点的最小值，然后交换即可。</li><li>up(x)，往上调整x。每次往上和父节点比较，需要交换时交换即可。</li></ul><p>怎么插入x？</p><ul><li>heap[ ++ idx] = x; up(x);</li></ul><p>最小值：</p><ul><li>heap[1]</li></ul><p>删除最小值：</p><ul><li>heap[1] = heap[idx]; idx—; down(1);</li></ul><p>删除任意元素</p><ul><li>heap[k] = heap[size], size—; down(k); up(k);</li></ul><p>修改元素：</p><ul><li>heap[k] = x; down(k); up(k);</li></ul><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+const int N = 100010;
+
+int n, m;
+int h[N], idx;
+
+void down(int u)
+{
+    int t = u;
+    if (u * 2 &lt;= idx &amp;&amp; h[u * 2] &lt; h[t]) t = u * 2;
+    if (u * 2 + 1 &lt;= idx &amp;&amp; h[u*2 +1] &lt; h[t]) t = u*2 + 1;
+    
+    if(u!=t){
+        swap(h[u], h[t]);
+        down(t);
+    }
+}
+
+void up(int u)
+{
+    while( u / 2 &amp;&amp; h[ u/2 ] &gt; h[u])
+    {
+        swap(h[u/2], h[u]);
+        u/=2;
+    }   
+}
+
+int main()
+{
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    for(int i = 1; i &lt;= n; ++ i) scanf(&quot;%d&quot;, &amp;h[i]);
+    idx = n;
+    
+    for(int i = n/2; i ; -- i) down(i);
+    /*这是建立堆的过程
+    为什么从n/2开始down？
+    n/2的子孩子是最后一个元素，是完全二叉树的倒数第二层，所以这样一直递归
+    的做就好，而且时间复杂度是O(n);
+    */
+    
+    while(m--)
+    {
+        printf(&quot;%d &quot;, h[1]);
+        h[1] = h[idx];
+        idx --;
+        down(1);
+    }
+
+    return 0;
+}
+</code></pre><p><strong>带映射版的堆操作:</strong></p><p><a href=https://www.acwing.com/problem/content/841/>https://www.acwing.com/problem/content/841/</a></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+const int N = 100010;
+
+int n;
+int h[N], ph[N], hp[N], idx;
+//ph存放插入的第k个元素在堆的下标位置
+//hp存放的是堆中第j个元素在ph数组的位置索引。
+//ph和hp是互为反函数。
+
+void heap_swap(int a, int b)
+{
+    swap(ph[hp[a]], ph[hp[b]]);
+    swap(hp[a], hp[b]);
+    swap(h[a], h[b]);
+}
+
+void down(int u)
+{
+    int t = u;
+    if (u * 2 &lt;= idx &amp;&amp; h[u * 2] &lt; h[t]) t = u * 2;
+    if (u * 2 + 1 &lt;= idx &amp;&amp; h[u*2 +1] &lt; h[t]) t = u*2 + 1;
+    
+    if(u!=t){
+        heap_swap(u, t);
+        down(t);
+    }
+}
+
+void up(int u)
+{
+    while( u / 2 &amp;&amp; h[ u/2 ] &gt; h[u])
+    {
+        heap_swap(u/2, u);
+        u/=2;
+    }   
+}
+
+int main()
+{
+    cin &gt;&gt; n;
+    int m = 0;
+    //m是第m个插入的元素。
+    while(n --)
+    {
+        char op[10];
+        int k, x;
+        cin &gt;&gt; op;
+        if (!strcmp(op, &quot;I&quot;))
+        {
+            cin &gt;&gt; x;
+            idx ++;
+            m ++;
+            ph[m] = idx;
+            hp[idx] = m;
+            h[idx] = x;
+            up(idx);
+        }
+        else if (!strcmp(op, &quot;PM&quot;)) cout &lt;&lt; h[1] &lt;&lt; endl;
+        else if (!strcmp(op, &quot;DM&quot;))
+        {
+            heap_swap(1, idx);
+            idx --;
+            down(1);
+        }
+        else if(!strcmp(op, &quot;D&quot;))
+        {
+            cin &gt;&gt; k;
+            k = ph[k];
+            heap_swap(k, idx);
+            idx --;
+            down(k), up(k);
+        } else 
+        {
+            cin &gt;&gt; k &gt;&gt; x;
+            k = ph[k];
+            h[k] = x;
+            down(k), up(k);
+        }
+    }
+
+    return 0;
+}
+</code></pre><p>find()和cnt()可以改成，get()和cnt()保证不编译错误，compile ERROR。</p><h1 id=hash表>Hash表 <a href=#hash%e8%a1%a8 class=anchor aria-hidden=true>#</a></h1><ul><li><p>哈希表的存储结构，认为是O(1). 如果要删除，只要开个数组标记一下。</p><ul><li><p>开放寻址法</p></li><li><p>拉链法</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_500x0_resize_box_3.png 500w" width=1056 height=348 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img10_hue02269398f091927dd5e6221f9baf572_104063_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img10.png width=1056 height=348 alt=Untitled></noscript></figure></p></li></ul><p>常见情景： 把0-10^9的数映射到0-10^5的数组。</p><p>x mod 10 ^ 5 附近的质数。然后处理冲突。100003.</p><p>和离散化比较，离散是需要保序的。</p></li><li><p>常用的字符串的哈希方式。</p></li></ul><pre><code class=language-cpp>//拉链法
+#include&lt;iostream&gt;
+#include&lt;cstring&gt;//有memset
+
+using namespace std;
+
+const int N = 100003;
+//取大于10万的最小的质数。
+
+int h[N], e[N], ne[N], idx;
+
+void insert(int x)
+{
+    int k = (x % N + N) % N; //因为有的数是负数。
+    
+    e[idx] = x;
+    //e存值
+    ne[idx] = h[k];
+    //ne存指针
+    h[k] = idx;
+    idx ++;
+    //插入头部。
+}
+
+bool find(int x)
+{
+    int k = (x % N + N) % N;
+    for(int i = h[k]; i != -1; i = ne[i])
+    {
+        if(e[i] == x)
+            return true;
+    }
+    return false;
+}
+
+int main(){
+    int n;
+    
+    memset(h, -1, sizeof h);
+    
+    cin &gt;&gt; n;
+    while(n --)
+    {
+        char op[2];
+        int x;
+        cin &gt;&gt; op &gt;&gt; x;
+        
+        if(op[0] == 'I') insert(x);
+        else {
+            if (find(x)) puts(&quot;Yes&quot;);
+            else puts(&quot;No&quot;);
+        }
+    }
+        
+    
+    return 0;
+}
+</code></pre><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_500x0_resize_box_3.png 500w" width=528 height=290 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img11_hu72b8828c0c4c914e71993c9d458a3870_85855_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img11.png width=528 height=290 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>//开放寻址法
+#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+//0xf3f3f3f3是10^9级别，很大，用来初始化数组
+const int N = 2e5 + 3, null = 0x3f3f3f3f;
+//一般取三倍。
+//取质数。
+int h[N];
+
+int find(int x)
+{
+    int k = (x % N + N) % N;
+ 
+    while(h[k] != null &amp;&amp; h[k] != x)
+    {
+        k ++;
+        if(k == N) k = 0;
+    }
+    //这个过程一定会停止的，因为总共只有1e5个数字，而N是二倍，所以不担心满;
+    //结束条件时，h[k] == null 或 h[k] == x
+    return k;
+}
+
+int main(){
+    int n;
+    cin &gt;&gt; n;
+    
+    memset(h, 0x3f, sizeof h);
+    
+    while(n --)
+    {
+        char op[2];
+        int x;
+        cin &gt;&gt; op &gt;&gt; x;
+        
+        int k = find(x);
+        if (op[0] == 'I')
+        {
+            h[k] = x;
+        } 
+        else
+        {
+            if (h[k] != null) puts(&quot;Yes&quot;);
+            else puts(&quot;No&quot;);
+        }
+        
+    }
+    
+    
+    return 0;
+}
+</code></pre><p>字符串前缀哈希法。</p><blockquote><p>str = &ldquo;ABCDEF&rdquo;
+h[1] = &ldquo;A&rdquo; // 前1个
+h[2] = &ldquo;AB&rdquo;</p></blockquote><p>即处理前缀的hash，h[0] = 0</p><p>如果对字符串进行哈希？当成p进制数，a * p ^ 3 + b * p * 2 ……;再取模Q。</p><p>不能把字母映射成0.</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_500x0_resize_box_3.png 500w" width=729 height=352 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_02/img12_hu6addbfa552702c42f6831685306972d5_118345_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_02/img12.png width=729 height=352 alt=Untitled></noscript></figure></p><p>那么前缀哈希值有什么用呢？因为我们已经知道 h[L]到h[R]的哈希值</p><p>所以求L - R的哈希值，只要 h[R] - h[L - 1] * p ^ {R-L+1};</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+typedef unsigned long long ULL;
+
+const int N = 100010, P = 131; 
+
+int n, m;
+char str[N];
+ULL h[N], p[N];
+//p是存放P的n次方
+
+ULL get(int l, int r)
+{
+    return h[r] - h[l - 1] * p[r - l + 1];
+}
+
+int main(){
+    
+    cin &gt;&gt; n &gt;&gt; m &gt;&gt; str + 1;
+    
+    p[0] = 1;
+    for(int i = 1; i &lt;= n; ++ i)
+    {
+        p[i] = p[i - 1] * P;
+        h[i] = h[i - 1] * P + str[i];
+    }
+    
+    while( m --)
+    {
+        int l1, r1, l2, r2;   
+        cin &gt;&gt; l1 &gt;&gt; r1 &gt;&gt; l2 &gt;&gt; r2;
+        if(get(l1, r1) == get(l2, r2))
+        {
+            puts(&quot;Yes&quot;);   
+        } else {
+            puts(&quot;No&quot;);   
+        }
+        
+    }
+    
+    return 0;
+}
+</code></pre><p>hash算法求两个字符串相同比KMP更好</p><p>KMP更适合循环节。</p><h1 id=cstl使用>C++STL使用 <a href=#cstl%e4%bd%bf%e7%94%a8 class=anchor aria-hidden=true>#</a></h1><pre><code class=language-cpp>vector 可变长数组，倍增的思想
+string 处理字符串的利器，substr(), c_str()
+queue, 队列，进行push(),front(), pop()
+priority_queue，优先队列，堆，push(), top(), pop()
+stack 栈，Push(), top(), pop()
+
+deque 双端队列
+
+set, map, multiset, multimap 基于平衡二叉树（红黑树）动态维护有序序列
+unordered_set, unordered_map, unordered_multiset, unordered_multimap 哈希表
+bitset;压位
+
+list用的不多。
+</code></pre><h2 id=vector>vector: <a href=#vector class=anchor aria-hidden=true>#</a></h2><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+int main()
+{
+    vector&lt;int&gt; a(10, 3);
+    vector&lt;int&gt; b[10]; //定义数组
+    //定义一个长度为10的，初始值为3的vector
+    //for(auto x : a) cout &lt;&lt; x &lt;&lt; endl;
+    
+    a.size(); //O(1)
+    a.empty(); 
+    
+    a.clear();//清空
+    /*系统分配空间时，所需时间与空间大小无关，与申请次数有关！！！
+    所以尽量减少申请空间的次数。
+    vector最初分配32的空间，然后如果不够，分配64，然后copy过去之前的元素。
+    申请长度为2 ^ n的数组，那么需要copy(1 + 2 + 2^n-1) = 2^n可以认为是O(1)
+    申请空间的次数是log(2^n) = n
+    */
+    
+    a.front();
+    a.back();
+    a.push_back();
+    a.pop_back();
+    begin();
+    end();
+    [];
+    
+		a &lt; b可以判断两个vector的大小，按字典序比。
+    return 0;
+}
+</code></pre><h2 id=下面是模板>下面是模板 <a href=#%e4%b8%8b%e9%9d%a2%e6%98%af%e6%a8%a1%e6%9d%bf class=anchor aria-hidden=true>#</a></h2><pre><code class=language-cpp>C++ STL简介
+vector, 变长数组，倍增的思想
+    size()  返回元素个数
+    empty()  返回是否为空
+    clear()  清空
+    front()/back()
+    push_back()/pop_back()
+    begin()/end()
+    []
+    支持比较运算，按字典序
+
+pair&lt;int, int&gt;p;
+    first, 第一个元素
+    second, 第二个元素
+    支持比较运算，以first为第一关键字，以second为第二关键字（字典序）
+		p = make_pair(10, 2);
+		p = {10, 2};
+		pair&lt;int, pair&lt;int, int&gt;&gt;p;存三个
+
+string，字符串
+    size()/length()  返回字符串长度
+    empty()
+    clear()
+    substr(起始下标，(子串长度))  返回子串
+    c_str()  返回字符串所在字符数组的起始地址
+				用于用printf输出
+		支持加运算：
+				string a = &quot;1&quot;;
+				a += &quot;bcd&quot;;
+
+queue, 队列
+    size()
+    empty()
+    push()  向队尾插入一个元素
+    front()  返回队头元素
+    back()  返回队尾元素
+    pop()  弹出队头元素
+
+priority_queue, 优先队列，默认是大顶堆
+    size()
+    empty()
+    push()  插入一个元素
+    top()  返回堆顶元素
+    pop()  弹出堆顶元素
+    定义成小顶堆的方式：
+				priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; q;
+		
+		priority_queue&lt;int&gt; heap;
+				可以通过插入-x实现小顶堆。
+
+stack, 栈
+    size()
+    empty()
+    push()  向栈顶插入一个元素
+    top()  返回栈顶元素
+    pop()  弹出栈顶元素
+
+deque, 双端队列，加强版vector，效率低，尽量不用
+    size()
+    empty()
+    clear()
+    front()/back()
+    push_back()/pop_back()
+    push_front()/pop_front()
+    begin()/end() 迭代器
+    [] 支持直接索引
+
+set, map, multiset, multimap, 基于平衡二叉树（红黑树），动态维护有序序列
+    size()
+    empty()
+    clear()
+    begin()/end()
+    ++, -- 返回前驱和后继，时间复杂度 O(logn)
+
+    set/multiset
+				set不允许重复元素
+        insert()  插入一个数
+        find()  查找一个数，返回迭代器，找不到返回end迭代器
+        count()  返回某一个数的个数
+        erase()
+            (1) 输入是一个数x，删除所有x   O(k + logn)
+            (2) 输入一个迭代器，删除这个迭代器
+        lower_bound()/upper_bound()
+            lower_bound(x)  返回大于等于x的最小的数的迭代器
+            upper_bound(x)  返回大于x的最小的数的迭代器
+    map/multimap
+        insert()  插入的数是一个pair
+        erase()  输入的参数是pair或者迭代器
+        find()
+        []  注意multimap不支持此操作。 时间复杂度是 O(logn)
+        lower_bound()/upper_bound()
+				
+				map&lt;string ,int&gt; a;
+				a[&quot;yxc&quot;] = 1;
+				cout &lt;&lt; a[&quot;yec&quot;] &lt;&lt; endl;
+				
+unordered_set, unordered_map, unordered_multiset, unordered_multimap, 哈希表
+    和上面类似，增删改查的时间复杂度是 O(1)
+    不支持 lower_bound()/upper_bound()， 迭代器的++，--.
+
+bitset, 圧位
+		是bool数组的1/8。🐂
+    bitset&lt;10000&gt; s; 
+		~s;
+
+    ~, &amp;, |, ^
+    &gt;&gt;, &lt;&lt;
+    ==, !=
+    []
+
+    count()  返回有多少个1
+
+    any()  判断是否至少有一个1
+    none()  判断是否全为0
+
+    set()  把所有位置成1
+    set(k, v)  将第k位变成v
+    reset()  把所有位变成0
+    flip()  等价于~
+    flip(k) 把第k位取反
+
+作者：yxc
+链接：https://www.acwing.com/blog/content/404/
+来源：AcWing
+</code></pre><div class="docs-navigation d-flex justify-content-between"><a href=https://notes.ming.ac/docs/algorithm/algorithm_01/><div class="card my-1"><div class="card-body py-2">&larr; 「Algorithm」01 基础算法</div></div></a><a class=ms-auto href=https://notes.ming.ac/docs/prologue/introduction/><div class="card my-1"><div class="card-body py-2">Introduction &rarr;</div></div></a></div></main></div></div></div><footer class="footer text-muted"><div class=container-xxl><div class=row><div class="col-lg-8 order-last order-lg-first"><ul class=list-inline><li class=list-inline-item></li></ul></div><div class="col-lg-8 order-first order-lg-last text-lg-end"><ul class=list-inline></ul></div></div></div></footer><script src=https://notes.ming.ac/js/bootstrap.min.592b9faf6c83a2bda564a377cf82f9a67546b198510a93fdb0728f9622ec22729d44be02fb2ea16c3fe5365ae1806259cd111932ca28e68b66462d6937635bab.js integrity="sha512-WSufr2yDor2lZKN3z4L5pnVGsZhRCpP9sHKPliLsInKdRL4C+y6hbD/lNlrhgGJZzREZMsoo5otmRi1pN2Nbqw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/highlight.min.e13cfba4c5524e30386cb9ea71f0f191f39d15b25b222f4b67549689f7c076158f42a2282446044f5cdacc76a6d003efbfa252a84aea0116703803b6339ae35f.js integrity="sha512-4Tz7pMVSTjA4bLnqcfDxkfOdFbJbIi9LZ1SWiffAdhWPQqIoJEYET1zazHam0APvv6JSqErqARZwOAO2M5rjXw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/vendor/katex/dist/katex.min.849bcb0a26d9f709f5e2355f5188d1c21e07bb04544918a1c2a6d290dc2ebcb9b787ba92911f609242c898b7ce8009c541be9153a357e673818164f829d917fe.js integrity="sha512-hJvLCibZ9wn14jVfUYjRwh4HuwRUSRihwqbSkNwuvLm3h7qSkR9gkkLImLfOgAnFQb6RU6NX5nOBgWT4KdkX/g==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/vendor/katex/dist/contrib/auto-render.min.916823ec103cf367b71e28a6f01513cb9c3ac6708ccb5229402ec46b8e30a8b25003db694df35d80e9dd666a371f327c6152790617b6256390c164109a90bd4c.js integrity="sha512-kWgj7BA882e3Hiim8BUTy5w6xnCMy1IpQC7Ea44wqLJQA9tpTfNdgOndZmo3HzJ8YVJ5Bhe2JWOQwWQQmpC9TA==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/main.min.647c6f9869eb8e24d3f5183f467970dbadd12adeec725e66830376db069558e917e21eb7dd363563443d2c91c5c6557ea3b2864d1f2a78c3f65e676fa19b961b.js integrity="sha512-ZHxvmGnrjiTT9Rg/Rnlw263RKt7scl5mgwN22waVWOkX4h633TY1Y0Q9LJHFxlV+o7KGTR8qeMP2XmdvoZuWGw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/index.min.ebc1952e74968a3243e9196c211f191dad8afc336432177a2b0d4d78f7582a89202ce07d932418c8d4f4da3c353bc10807ac349bb9ed79bb6835068f61dde914.js integrity="sha512-68GVLnSWijJD6RlsIR8ZHa2K/DNkMhd6Kw1NePdYKokgLOB9kyQYyNT02jw1O8EIB6w0m7ntebtoNQaPYd3pFA==" crossorigin=anonymous defer></script></body></html>
