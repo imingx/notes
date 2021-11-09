@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
 
-<<<<<<< HEAD
-Sitemap: https://doks.netlify.app/sitemap.xml
-=======
 Sitemap: https://notes.ming.ac/sitemap.xml
->>>>>>> 33e1e4f (init)
