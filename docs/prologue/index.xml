@@ -8,4 +8,8 @@ npm run create [path] [flags] See also the Hugo docs: hugo new.
 lint # Check scripts, styles, and markdown for errors:
 npm run lint scripts # Check scripts for errors:
 npm run lint:scripts [-- --fix] styles # Check styles for errors:
-npm run lint:styles [-- --fix] markdown # Check markdown for errors:</description></item></channel></rss>
+npm run lint:styles [-- --fix] markdown # Check markdown for errors:</description></item><item><title>est</title><link>https://notes.ming.ac/docs/prologue/introduction/test/</link><pubDate>Tue, 09 Nov 2021 12:36:11 +0800</pubDate><guid>https://notes.ming.ac/docs/prologue/introduction/test/</guid><description>asd
+as
+da
+sd
+as</description></item></channel></rss>
