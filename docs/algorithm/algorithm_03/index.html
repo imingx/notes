@@ -1,0 +1,1011 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=preload as=font href=https://notes.ming.ac/fonts/vendor/jost/jost-v4-latin-regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/vendor/jost/jost-v4-latin-700.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/KaTeX_Main-Regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://notes.ming.ac/fonts/KaTeX_Math-Italic.woff2 type=font/woff2 crossorigin><script>(()=>{var b=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,a=localStorage.getItem("theme");b&&a===null&&(localStorage.setItem("theme","dark"),document.documentElement.setAttribute("data-dark-mode","")),b&&a==="dark"&&document.documentElement.setAttribute("data-dark-mode",""),a==="dark"&&document.documentElement.setAttribute("data-dark-mode","")})()</script><link rel=stylesheet href=https://notes.ming.ac/main.8a3997c8ce45bebd31e91ce45b4b19edc65587b4c358171040295b504e54c37e8e825120f626cbefafd36d1e786d22c3143d4049aa2dcf312ece9fe1a5ebccdd.css integrity="sha512-ijmXyM5Fvr0x6RzkW0sZ7cZVh7TDWBcQQClbUE5Uw36OglEg9ibL76/TbR54bSLDFD1ASaotzzEuzp/hpevM3Q==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><meta name=robots content="index, follow"><meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>「Algorithm」03 搜索与图论 | Ming Notes</title><meta name=description content="深度优先搜索DFS 广度优先搜索BFS 树与图的存储、深搜、广搜 拓扑排序 最短路 最小生成树 二分图  DFS和BFS #   BFS是queue，O（2^n）是可以找最短路
+DFS是stack，O（n）不具有最短程
+DFS： # 求全排列的过程。
+  #include&amp;lt;iostream&amp;gt; using namespace std; const int N = 10; int n; int path[N]; bool st[N]; void dfs(int u) { if(u == n) { for(int i = 0; i &amp;lt; n; ++ i) cout &amp;lt;&amp;lt; path[i] &amp;lt;&amp;lt; &amp;quot; &amp;quot;; puts(&amp;quot;&amp;quot;); return; } for(int i = 1; i &amp;lt;= n; ++i) if(!st[i]){ path[u] = i; st[i] = true; dfs(u + 1); st[i] = false; } } int main(){ cin &amp;gt;&amp;gt; n; dfs(0); return 0; }  n皇后问题："><link rel=canonical href=https://notes.ming.ac/docs/algorithm/algorithm_03/><meta property="og:locale" content="en_US"><meta property="og:type" content="article"><meta property="og:title" content="「Algorithm」03 搜索与图论"><meta property="og:description" content="深度优先搜索DFS 广度优先搜索BFS 树与图的存储、深搜、广搜 拓扑排序 最短路 最小生成树 二分图  DFS和BFS #   BFS是queue，O（2^n）是可以找最短路
+DFS是stack，O（n）不具有最短程
+DFS： # 求全排列的过程。
+  #include<iostream> using namespace std; const int N = 10; int n; int path[N]; bool st[N]; void dfs(int u) { if(u == n) { for(int i = 0; i < n; ++ i) cout << path[i] << &#34; &#34;; puts(&#34;&#34;); return; } for(int i = 1; i <= n; ++i) if(!st[i]){ path[u] = i; st[i] = true; dfs(u + 1); st[i] = false; } } int main(){ cin >> n; dfs(0); return 0; }  n皇后问题："><meta property="og:url" content="https://notes.ming.ac/docs/algorithm/algorithm_03/"><meta property="og:site_name" content="Ming Notes"><meta property="article:published_time" content="2021-11-15T12:35:01+08:00"><meta property="article:modified_time" content="2021-11-15T12:35:01+08:00"><meta property="og:image" content="https://notes.ming.ac/doks.png"><meta property="og:image:alt" content="Ming Notes"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content><meta name=twitter:creator content><meta name=twitter:title content="「Algorithm」03 搜索与图论"><meta name=twitter:description content><meta name=twitter:image content="https://notes.ming.ac/doks.png"><meta name=twitter:image:alt content="「Algorithm」03 搜索与图论"><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://notes.ming.ac/#/schema/organization/1","name":"Notes","url":"https://notes.ming.ac/","sameAs":["https://twitter.com/guomingming9","https://github.com/imingx/note"],"logo":{"@type":"ImageObject","@id":"https://notes.ming.ac/#/schema/image/1","url":"https://notes.ming.ac/logo-doks.png","width":512,"height":512,"caption":"Notes"},"image":{"@id":"https://notes.ming.ac/#/schema/image/1"}},{"@type":"WebSite","@id":"https://notes.ming.ac/#/schema/website/1","url":"https://notes.ming.ac/","name":"Ming Notes","description":"存放笔记的地方","publisher":{"@id":"https://notes.ming.ac/#/schema/organization/1"}},{"@type":"WebPage","@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/","url":"https://notes.ming.ac/docs/algorithm/algorithm_03/","name":"「Algorithm」03 搜索与图论","description":"","isPartOf":{"@id":"https://notes.ming.ac/#/schema/website/1"},"about":{"@id":"https://notes.ming.ac/#/schema/organization/1"},"datePublished":"2021-11-15T12:35:01CET","dateModified":"2021-11-15T12:35:01CET","breadcrumb":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/#/schema/breadcrumb/1"},"primaryImageOfPage":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/#/schema/image/2"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://notes.ming.ac/docs/algorithm/algorithm_03/"]}]},{"@type":"BreadcrumbList","@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/#/schema/breadcrumb/1","name":"Breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://notes.ming.ac","url":"https://notes.ming.ac","name":"Home"}},{"@type":"ListItem","position":3,"item":{"@type":"WebPage","@id":"https://notes.ming.ac/docs/","url":"https://notes.ming.ac/docs/","name":"Docs"}},{"@type":"ListItem","position":4,"item":{"@type":"WebPage","@id":"https://notes.ming.ac/docs/algorithm/","url":"https://notes.ming.ac/docs/algorithm/","name":"Algorithm"}},{"@type":"ListItem","position":5,"item":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/"}}]},{"@context":"https://schema.org","@graph":[{"@type":"Article","@id":"https://notes.ming.ac/#/schema/article/1","headline":"「Algorithm」03 搜索与图论","description":"","isPartOf":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/"},"mainEntityOfPage":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/"},"datePublished":"2021-11-15T12:35:01CET","dateModified":"2021-11-15T12:35:01CET","author":{"@id":"https://notes.ming.ac/#/schema/person/2"},"publisher":{"@id":"https://notes.ming.ac/#/schema/organization/1"},"image":{"@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/#/schema/image/2"}}]},{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://notes.ming.ac/#/schema/person/2","name":"gmm","sameAs":["https://twitter.com/guomingming9","https://github.com/imingx"]}]},{"@context":"https://schema.org","@graph":[{"@type":"ImageObject","@id":"https://notes.ming.ac/docs/algorithm/algorithm_03/#/schema/image/2","url":"https://notes.ming.ac/doks.png","contentUrl":"https://notes.ming.ac/doks.png","caption":"「Algorithm」03 搜索与图论"}]}]}</script><meta name=theme-color content="#fff"><link rel=apple-touch-icon sizes=180x180 href=https://notes.ming.ac/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://notes.ming.ac/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://notes.ming.ac/favicon-16x16.png><link rel=manifest crossorigin=use-credentials href=https://notes.ming.ac/site.webmanifest></head><body class="docs single"><div class=sticky-lg-top><div class=header-bar></div><header class="navbar navbar-expand-md navbar-light doks-navbar"><nav class="container-xxl flex-wrap flex-md-nowrap" aria-label="Main navigation"><a class="navbar-brand p-0 me-auto" href=https://notes.ming.ac/ aria-label="Ming Notes">Ming Notes</a>
+<button class="btn btn-menu d-block d-md-none order-5" type=button data-bs-toggle=offcanvas data-bs-target=#offcanvasDoks aria-controls=offcanvasDoks aria-label="Open main menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button><div class="offcanvas offcanvas-start border-0 py-md-1" tabindex=-1 id=offcanvasDoks data-bs-backdrop=true aria-labelledby=offcanvasDoksLabel><div class="header-bar d-md-none"></div><div class="offcanvas-header d-md-none"><h2 class="h5 offcanvas-title ps-2" id=offcanvasDoksLabel><a class=text-dark href=https://notes.ming.ac/>Ming Notes</a></h2><button type=button class="btn-close text-reset me-2" data-bs-dismiss=offcanvas aria-label="Close main menu"></button></div><div class="offcanvas-body px-4"><h3 class="h6 text-uppercase mb-3 d-md-none">Main</h3><ul class="nav flex-column flex-md-row ms-md-n3"><li class=nav-item><a class="nav-link ps-0 py-1 active" href=https://notes.ming.ac/docs/prologue/introduction/>Docs</a></li><li class=nav-item><a class="nav-link ps-0 py-1" href=https://www.ming.ac>Blog</a></li></ul><hr class="text-black-50 my-4 d-md-none"><h3 class="h6 text-uppercase mb-3 d-md-none">Socials</h3><ul class="nav flex-column flex-md-row ms-md-auto me-md-n5 pe-md-2"><li class=nav-item><a class="nav-link ps-0 py-1" href=https://github.com/imingx><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg><small class="ms-2 d-md-none">GitHub</small></a></li></ul></div></div><button id=mode class="btn btn-link order-md-1" type=button aria-label="Toggle user interface mode">
+<span class=toggle-dark><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span><span class=toggle-light><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button></nav></header></div><nav class="doks-subnavbar py-2 sticky-lg-top d-lg-none" aria-label="Secondary navigation"><div class="container-xxl d-flex align-items-md-center"><button class="btn doks-sidebar-toggle d-lg-none ms-3 order-3 collapsed ms-auto" type=button data-bs-toggle=collapse data-bs-target=#doks-docs-nav aria-controls=doks-docs-nav aria-expanded=false aria-label="Toggle documentation navigation"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="doks doks-expand" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Expand</title><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="doks doks-collapse" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Collapse</title><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg></button></div></nav><div class=container-xxl><aside class=doks-sidebar><nav id=doks-docs-nav class="collapse d-lg-none" aria-label="Tertiary navigation"><ul class="list-unstyled collapsible-sidebar"><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-prologue aria-expanded=false>
+Prologue</button><div class=collapse id=section-prologue><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/introduction/>Introduction</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/commands/>Commands</a></li></ul></div></li><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-algorithm aria-expanded=true>
+algorithm</button><div class="collapse show" id=section-algorithm><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_01/>「Algorithm」01 基础算法</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_02/>「Algorithm」02 数据结构</a></li><li><a class="docs-link rounded active" href=https://notes.ming.ac/docs/algorithm/algorithm_03/>「Algorithm」03 搜索与图论</a></li></ul></div></li></ul></nav></aside></div><div class="wrap container-xxl" role=document><div class=content><div class="row flex-xl-nowrap"><div class="col-lg-5 col-xl-4 docs-sidebar d-none d-lg-block"><nav class=docs-links aria-label="Main navigation"><ul class="list-unstyled collapsible-sidebar"><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-prologue aria-expanded=false>
+Prologue</button><div class=collapse id=section-prologue><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/introduction/>Introduction</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/prologue/commands/>Commands</a></li></ul></div></li><li class=mb-1><button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle=collapse data-bs-target=#section-algorithm aria-expanded=true>
+algorithm</button><div class="collapse show" id=section-algorithm><ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small"><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_01/>「Algorithm」01 基础算法</a></li><li><a class="docs-link rounded" href=https://notes.ming.ac/docs/algorithm/algorithm_02/>「Algorithm」02 数据结构</a></li><li><a class="docs-link rounded active" href=https://notes.ming.ac/docs/algorithm/algorithm_03/>「Algorithm」03 搜索与图论</a></li></ul></div></li></ul></nav></div><nav class="docs-toc d-none d-xl-block col-xl-3" aria-label="Secondary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#dfs和bfs>DFS和BFS</a><ul><li><a href=#dfs>DFS：</a></li><li><a href=#bfs>BFS</a></li></ul></li><li><a href=#树和图>树和图</a><ul><li><a href=#图的深搜>图的深搜</a></li><li><a href=#图的广搜>图的广搜</a><ul><li><a href=#848-有向图的拓扑序列>848. 有向图的拓扑序列</a></li></ul></li></ul></li><li><a href=#最短路>最短路</a><ul><li><a href=#朴素dijkstra算法>朴素Dijkstra算法</a></li><li><a href=#堆优化的dijkstra算法>堆优化的Dijkstra算法</a></li><li><a href=#bellman-ford>Bellman-ford</a></li><li><a href=#spfa>SPFA</a><ul><li><a href=#spfa判断最短路>spfa判断最短路</a></li><li><a href=#spfa判断负环>spfa判断负环</a></li></ul></li><li><a href=#floyd>Floyd</a></li></ul></li><li><a href=#最小生成树>最小生成树</a><ul><li><a href=#朴素版的prim算法>朴素版的Prim算法</a></li><li><a href=#kruskal>Kruskal</a></li></ul></li><li><a href=#染色法判定二分图>染色法判定二分图</a><ul><li><a href=#匈牙利算法>匈牙利算法</a></li></ul></li></ul></nav></div></nav><main class="docs-content col-lg-11 col-xl-9"><h1>「Algorithm」03 搜索与图论</h1><p class=lead></p><nav class=d-xl-none aria-label="Quaternary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#dfs和bfs>DFS和BFS</a><ul><li><a href=#dfs>DFS：</a></li><li><a href=#bfs>BFS</a></li></ul></li><li><a href=#树和图>树和图</a><ul><li><a href=#图的深搜>图的深搜</a></li><li><a href=#图的广搜>图的广搜</a><ul><li><a href=#848-有向图的拓扑序列>848. 有向图的拓扑序列</a></li></ul></li></ul></li><li><a href=#最短路>最短路</a><ul><li><a href=#朴素dijkstra算法>朴素Dijkstra算法</a></li><li><a href=#堆优化的dijkstra算法>堆优化的Dijkstra算法</a></li><li><a href=#bellman-ford>Bellman-ford</a></li><li><a href=#spfa>SPFA</a><ul><li><a href=#spfa判断最短路>spfa判断最短路</a></li><li><a href=#spfa判断负环>spfa判断负环</a></li></ul></li><li><a href=#floyd>Floyd</a></li></ul></li><li><a href=#最小生成树>最小生成树</a><ul><li><a href=#朴素版的prim算法>朴素版的Prim算法</a></li><li><a href=#kruskal>Kruskal</a></li></ul></li><li><a href=#染色法判定二分图>染色法判定二分图</a><ul><li><a href=#匈牙利算法>匈牙利算法</a></li></ul></li></ul></nav></div></nav><ol><li>深度优先搜索DFS</li><li>广度优先搜索BFS</li><li>树与图的存储、深搜、广搜</li><li>拓扑排序</li><li>最短路</li><li>最小生成树</li><li>二分图</li></ol><h1 id=dfs和bfs>DFS和BFS <a href=#dfs%e5%92%8cbfs class=anchor aria-hidden=true>#</a></h1><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_500x0_resize_box_3.png 500w" width=978 height=498 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img1_hu73d8b143e57700ca6cbac89a2f1903d3_195388_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img1.png width=978 height=498 alt=Untitled></noscript></figure></p><p>BFS是queue，O（2^n）是可以找最短路</p><p>DFS是stack，O（n）不具有最短程</p><h2 id=dfs>DFS： <a href=#dfs class=anchor aria-hidden=true>#</a></h2><p>求全排列的过程。</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_500x0_resize_box_3.png 500w" width=718 height=478 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img2_hu5867664d20a339a06eea228e57b3836a_133041_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img2.png width=718 height=478 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+using namespace std;
+
+const int N = 10;
+
+int n;
+int path[N];
+bool st[N];
+
+void dfs(int u)
+{
+    if(u == n)
+    {
+        for(int i = 0; i &lt; n; ++ i)
+            cout &lt;&lt; path[i] &lt;&lt; &quot; &quot;;
+        puts(&quot;&quot;);
+        return;
+    }
+    for(int i = 1; i &lt;= n; ++i)
+        if(!st[i]){
+            path[u] = i;
+            st[i] = true;
+            dfs(u + 1);
+            st[i] = false;
+        }
+
+}
+
+int main(){
+    cin &gt;&gt; n;
+    
+    dfs(0);
+    
+    return 0;
+}
+</code></pre><p>n皇后问题：</p><p>考虑对角线</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_500x0_resize_box_3.png 500w" width=1082 height=986 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img3_hu29e8b47ea4e839cbf8c0dc22f445f699_321462_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img3.png width=1082 height=986 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+
+using namespace std;
+
+const int N = 20;
+
+int n;
+char g[N][N];
+int col[N], dg[N], udg[N];
+//col是列，dg是对角线，udg是右对角线
+
+void dfs(int u)
+{
+    if (u == n)
+    {
+        for(int i = 0; i &lt; n; ++ i) puts(g[i]);      
+        puts(&quot;&quot;);
+        return;
+    }
+    
+    for(int i = 0; i &lt; n; ++ i)
+    {
+        if(!col[i] &amp;&amp; !dg[u + i] &amp;&amp; !udg[i - u + n]){
+        //i是y, u是x
+            g[u][i] = 'Q';
+            col[i] = dg[u+i] = udg[i - u + n] = true;
+            dfs(u + 1);
+            col[i] = dg[u+i] = udg[i - u + n] = false;
+            g[u][i] = '.';
+        }      
+    }
+}
+
+int main(){
+    
+    cin &gt;&gt; n;
+    
+    for(int i = 0; i &lt; n ; ++ i)
+        for(int j = 0;  j&lt; n; ++ j)
+            g[i][j] = '.';
+    dfs(0);
+    return 0;
+}
+</code></pre><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_500x0_resize_box_3.png 500w" width=1158 height=822 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img4_hu093e0b345611ff502c28446126713d89_215901_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img4.png width=1158 height=822 alt=Untitled></noscript></figure></p><h2 id=bfs>BFS <a href=#bfs class=anchor aria-hidden=true>#</a></h2><p>求最短路，必须权重为1</p><p>走迷宫：</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+typedef pair&lt;int, int&gt; PII;
+
+const int N = 110;
+
+int n, m;
+int g[N][N];
+int d[N][N]; //d数组存放此点到起点的距离。
+PII q[N * N]; //表示搜索过程中的坐标点
+PII pre[N][N];//记录每个点之前的点
+
+int bfs()
+{
+    int hh = 0, tt = -1;
+    q[++ tt] = {0, 0};
+    
+    memset(d, -1, sizeof d);
+    d[0][0] = 0;
+    
+    int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+    
+    
+    while(hh &lt;= tt)
+    {
+        auto t = q[hh ++];
+        
+        for(int i = 0; i &lt; 4; ++ i)
+        {
+            int x = t.first + dx[i], y = t.second + dy[i];
+            //g[x][y] == 0说明可以走，d[x][y] == -1，说明没有赋值，说明没有走过
+            if (x &gt;= 0 &amp;&amp; x &lt; n &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; m &amp;&amp; g[x][y] == 0 &amp;&amp; d[x][y] == -1)
+            {
+                d[x][y] = d[t.first][t.second]  + 1;
+                pre[x][y] = t;
+                q[++ tt] = {x,y};
+            }
+        }
+    }
+    
+    int x = n - 1, y = m - 1;
+    while(x || y){
+        cout &lt;&lt; x &lt;&lt; ' ' &lt;&lt; y &lt;&lt; endl;
+        auto t = pre[x][y];
+        x = t.first, y = t.second;
+    }
+		//输出路径，反着
+    
+    return d[n-1][m-1];
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    for(int i = 0; i &lt; n; ++ i)
+        for(int j = 0; j &lt; m; ++ j)
+            cin &gt;&gt; g[i][j];
+    
+    cout &lt;&lt; bfs() &lt;&lt; endl;
+        
+    
+    return 0;
+}
+</code></pre><h1 id=树和图>树和图 <a href=#%e6%a0%91%e5%92%8c%e5%9b%be class=anchor aria-hidden=true>#</a></h1><p>有向图和无向图</p><p>a→b</p><p>有向图的存储：</p><ul><li>邻接矩阵 G[a, b]表示a→b</li><li>邻接表 n各点，每个单链表</li></ul><h2 id=图的深搜>图的深搜 <a href=#%e5%9b%be%e7%9a%84%e6%b7%b1%e6%90%9c class=anchor aria-hidden=true>#</a></h2><pre><code class=language-cpp>#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+const int N = 100010, M = N * 2;
+
+int n, m;
+//h是n个链表头，e是节点的值，ne是节点的指针。
+int h[N], e[M], ne[M], idx;
+bool st[N]; //标记作用
+
+void add(int a, int b)
+{
+    e[idx] = b;
+    ne[idx] = h[a];
+    h[a] = idx ++;
+}
+
+void dfs(int u)
+{
+    st[u] = true;
+
+    for(int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(!st[j]) dfs(j);
+    }
+
+}
+
+int main()
+{
+    memset(h, -1, sizeof h);
+    dfs(1);
+
+    return 0;
+}
+</code></pre><p>树的重心：</p><pre><code class=language-cpp>#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+const int N = 100010, M = N * 2;
+
+int n;
+//h是n个链表头，e是节点的值，ne是节点的指针。
+int h[N], e[M], ne[M], idx;
+bool st[N]; //标记作用
+
+int ans = N;
+
+void add(int a, int b)
+{
+    e[idx] = b;
+    ne[idx] = h[a];
+    h[a] = idx;
+    idx++;
+}
+
+//返回以u为根的树的节点的数量
+int dfs(int u)
+{
+    st[u] = true;
+    
+    int sum = 1, res = 0;
+    //sum是以u为根的节点的数量
+    //res记录删除该点u的联通块的点的数量的最大值
+    //result的缩写是res
+    
+    for(int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(!st[j]){
+            int s = dfs(j);
+            res = max(res, s);
+            sum += s;
+        } 
+    }
+    
+    res = max(res, n - sum);
+    ans = min(ans, res);
+    return sum;
+}
+
+int main()
+{
+    memset(h, -1, sizeof h);
+    
+    cin &gt;&gt; n ;
+    for(int i = 0; i &lt; n -1; ++i)
+    {
+        int a, b;
+        cin &gt;&gt; a &gt;&gt; b;
+        add(a, b);
+        add(b, a);
+    }
+    
+    dfs(1);//从1开始，是因为输入的a,b是从1开始的。
+
+    cout &lt;&lt; ans &lt;&lt; endl;
+    return 0;
+}
+</code></pre><h2 id=图的广搜>图的广搜 <a href=#%e5%9b%be%e7%9a%84%e5%b9%bf%e6%90%9c class=anchor aria-hidden=true>#</a></h2><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_500x0_resize_box_3.png 500w" width=1488 height=166 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img5_hu9650d959fe5b1d762a4de355ea20d2c6_37755_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img5.png width=1488 height=166 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+const int N = 1e5 + 10;
+
+int n, m;
+int h[N], e[N], ne[N], idx;
+
+int d[N], q[N];//d是距离，q是队列
+
+void add(int a, int b)
+{
+    e[idx] = b;
+    ne[idx] = h[a];
+    h[a] = idx;
+    idx ++;
+}
+
+int bfs()
+{  
+   int hh = 0, tt = -1;  
+   
+    q[++ tt] = 1;
+    d[1] = 0;
+    
+    while(hh &lt;= tt)
+    {
+        int t = q[hh ++];
+        for(int i = h[t]; i != -1; i = ne[i])
+        {
+            int j = e[i];
+            if(d[j] == -1)
+            {
+                d[j] = d[t] + 1;
+                q[++ tt] = j;
+            }
+        }
+    }
+    
+    return d[n];
+}
+
+int main()
+{
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    memset(h, -1, sizeof h);
+    memset(d, -1, sizeof d);
+    
+    for(int i = 0; i &lt; m; ++ i)
+    {
+        int a, b;
+        cin &gt;&gt; a &gt;&gt; b;
+        add(a, b);
+    }
+    
+    cout &lt;&lt; bfs() &lt;&lt; endl;
+    
+    return 0;
+}
+
+</code></pre><h3 id=848-有向图的拓扑序列>848. 有向图的拓扑序列 <a href=#848-%e6%9c%89%e5%90%91%e5%9b%be%e7%9a%84%e6%8b%93%e6%89%91%e5%ba%8f%e5%88%97 class=anchor aria-hidden=true>#</a></h3><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_500x0_resize_box_3.png 500w" width=346 height=206 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img6_hu3e64ef57b49e34263f0299dae222665a_15703_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img6.png width=346 height=206 alt=Untitled></noscript></figure></p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_500x0_resize_box_3.png 500w" width=816 height=726 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img7_hue58e8fc5b22fb2af12df2db0cb3d4eaa_168982_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img7.png width=816 height=726 alt=Untitled></noscript></figure></p><p>起点在终点的前面，那么就是一个拓扑序列</p><p>有向无环图成为拓扑图。</p><ul><li>入度：有几条边指向自己。</li><li>出度：自己有几条边出去。</li></ul><p>入度为零，说明没有一个点在我前面。所以所有入度为零的点都可以排在最前面。</p><p>有向无环图一定存在一个入度为0的点。</p><blockquote><p>假设所有点的入度都不是零，那么任选一个点，往上找n个点，然后就是找第n+1个点时，一定需要在n个点里取一个点，一定存在环。</p></blockquote><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_500x0_resize_box_3.png 500w" width=1196 height=522 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img8_hu8d4a357d890ae42b37fce3518cb9adf5_227448_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img8.png width=1196 height=522 alt=Untitled></noscript></figure></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+const int N = 100010;
+
+int n, m;
+int h[N], e[N], ne[N], idx;
+int q[N], d[N];
+//d是入度
+
+void add(int a, int b){
+    e[idx] = b, ne[idx] = h[a], h[a] = idx ++;
+}
+
+bool topsort(){
+    int hh = 0, tt = -1;
+    
+    for(int i = 1; i &lt;= n; ++ i)
+        if(!d[i])
+            q[++ tt] = i;
+    //把入度为0的入队
+    
+    while(hh &lt;= tt)
+    {
+        int t = q[hh++];
+        
+        for(int i = h[t]; i != -1; i = ne[i])
+        {
+            int j = e[i];
+            d[j] --;
+            if(d[j] == 0) q[ ++ tt] = j;
+            //当入队的时候，保证是符合拓扑序列定义的
+            //因为入队的元素，保证没有指向之前入队元素的边
+            //因为入队元素的入度，是从再之前的入队元素删去的。
+        }
+    }
+    //如果tt==n-1说明已经全部入队了，是有向的无环图
+    return tt == n - 1;
+}
+
+int main()
+{
+    cin &gt;&gt; n &gt;&gt; m;    
+    
+    memset(h, -1, sizeof h);
+    
+    for(int i = 0; i &lt; m; ++ i)
+    {
+        int a, b;
+        cin &gt;&gt; a &gt;&gt; b;
+        add(a, b);
+        d[b] ++;
+    }
+    
+    if(topsort())
+    {
+        for(int i = 0; i &lt; n; ++ i)
+            printf(&quot;%d &quot;,q[i]);
+        
+    } else {
+        puts(&quot;-1&quot;);
+    }
+    return 0;
+}
+</code></pre><h1 id=最短路>最短路 <a href=#%e6%9c%80%e7%9f%ad%e8%b7%af class=anchor aria-hidden=true>#</a></h1><p>最短路：</p><ul><li>单源最短路：从1号点到n号的最短路<ul><li>所有边权都是正数<ul><li>朴素的Dijkstra算法 O(n ^ 2)，<ul><li>适用于稠密图</li></ul></li><li>堆优化的Dijstra算法 O(mlogn)<ul><li>适用于稀疏图</li><li>m是边数</li></ul></li></ul></li><li>存在负权边<ul><li>Bellman-Ford 算法 O(mn)<ul><li>不超过k条边的条件，必须用这个</li></ul></li><li>SPFA算法，BF算法的优化 O(m)</li></ul></li></ul></li><li>多源汇最短路：求出任意2个顶点之间的最短路径，支持负权边<ul><li>Floyd算法，O(n^3)</li></ul></li></ul><p><img class="img-fluid lazyload blur-up" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img9_hu6ff34e07a020812f68c4c168f87dd6f7_32338_20x0_resize_box_3.png data-src=https://notes.ming.ac/docs/algorithm/algorithm_03/img9.png width=300 height=280 alt=Untitled></p><h2 id=朴素dijkstra算法>朴素Dijkstra算法 <a href=#%e6%9c%b4%e7%b4%a0dijkstra%e7%ae%97%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><p>适用稠密图。</p><p>单源最短路，从1号点到其他点的最短距离。</p><p>过程：</p><p>s是已经确定最短距离的点。</p><ol><li>dis[1] = 0, dis[i] = +无穷</li><li>对于i from 2 to n, 找到不在s中的距离最近的点t。然后将t加入到s中，然后用t更新其他点的距离。</li></ol><p>稠密图用 领接矩阵。</p><p>稀释图用 邻接表。</p><p>有向图和无向图的最短路一样。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+const int N = 510;
+
+int n, m;
+int g[N][N];
+int dist[N];
+bool st[N];
+//dist 是距离
+//st是标记
+
+int dijkstra()
+{
+    memset(dist, 0x3f, sizeof dist);
+    //初始g为最大值。
+    dist[1] = 0;
+    for(int i = 0; i &lt; n; ++ i)
+    {
+        int t = -1;
+        for(int j = 1; j &lt;= n; ++ j)
+            if(!st[j] &amp;&amp; (t == -1 || dist[t] &gt; dist[j]))
+                t = j;       
+				if(t == n)
+						break;
+				//提前break
+        st[t] = true;
+        
+        for(int j = 1; j &lt;= n; ++ j)
+            dist[j] = min(dist[j], dist[t] + g[t][j]);
+    }
+    
+    if(dist[n] == 0x3f3f3f3f) return -1;
+    return dist[n];
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    //重边和自环可以处理，重边保留最短。
+    memset(g, 0x3f, sizeof g);
+    
+    while(m --)
+    {
+        int a, b, c;
+        cin &gt;&gt; a &gt;&gt; b &gt;&gt; c; 
+        g[a][b] = min(g[a][b], c);
+        
+    }
+    cout &lt;&lt; dijkstra();
+
+    return 0;
+}
+</code></pre><p>为什么Dijkstra不能处理负值？</p><ul><li>依此标记A，C，B，D。但是标记完D之后，它只能更新B的dist的值，使得dist[B] = -201，但是C无法被更新。因为A、B无法再次访问了。所以负值有问题。</li></ul><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_500x0_resize_box_3.png 500w" width=1444 height=614 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img10_hu4758e583d3f308cbf0872f31f5a24741_370700_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img10.png width=1444 height=614 alt=Untitled></noscript></figure></p><h2 id=堆优化的dijkstra算法>堆优化的Dijkstra算法 <a href=#%e5%a0%86%e4%bc%98%e5%8c%96%e7%9a%84dijkstra%e7%ae%97%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><p>O(mlogn)，用堆的话，最后一步总共修改m次，每次是logn。</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_500x0_resize_box_3.png 500w" width=1514 height=822 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img11_hu689469617b29a287fa5d7eebdcdf0640_222222_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img11.png width=1514 height=822 alt=Untitled></noscript></figure></p><p>适用稀疏图，用邻接表</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;queue&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+const int N = 150000;
+
+int n, m;
+int h[N], e[N], ne[N], idx, w[N];
+int dist[N];
+bool st[N];
+
+typedef pair&lt;int, int&gt; PII; 
+
+void add(int a, int b, int c)
+{
+    e[idx] = b;
+    ne[idx] = h[a];
+    w[idx] = c;
+    h[a] = idx++;
+}
+
+int dijkstra()
+{
+    memset(dist, 0x3f, sizeof dist);
+    //初始g为最大值。
+    dist[1] = 0;
+		   
+    priority_queue&lt;PII, vector&lt;PII&gt;, greater&lt;PII&gt;&gt; heap;
+    heap.push({0, 1});
+    //0是距离，1是点。
+   
+    while(heap.size()){
+        auto t = heap.top();
+        heap.pop();
+        
+        int ver = t.second, distance = t.first;
+        
+				//因为有的已经加入了queue，然后被标记,所以必须进行st判断。
+        if(st[ver]) continue;
+        st[ver] = true;
+        
+        for(int i = h[ver]; i != -1; i = ne[i])
+        {
+            int j = e[i];
+            if(dist[j] &gt; distance + w[i])
+            {
+                dist[j] = distance + w[i];
+								//可加 if(!st[j])
+                heap.push({dist[j],j});
+								//j有可能访问过，有可能没访问过
+            }
+        }
+    }
+    
+    if(dist[n] == 0x3f3f3f3f) return -1;
+    return dist[n];
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    memset(h, -1, sizeof h);
+    
+    while(m --)
+    {
+        int a, b, c;
+        cin &gt;&gt; a &gt;&gt; b &gt;&gt; c; 
+        add(a, b, c);
+    }
+    cout &lt;&lt; dijkstra();
+
+    return 0;
+}
+</code></pre><h2 id=bellman-ford>Bellman-ford <a href=#bellman-ford class=anchor aria-hidden=true>#</a></h2><p>O(mn)，处理负权边，有边数限制的题</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_500x0_resize_box_3.png 500w" width=664 height=232 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img12_huc45ade4d8b1a2c4b903f3734f104bdce_66150_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img12.png width=664 height=232 alt=Untitled></noscript></figure></p><p>循环完n次后，一定满足，dist[b] ≤ dist[a] + w;三角不等式，是一个松弛操作。可处理负权边。</p><p>迭代k次，表示的意思是不超过k条边的最短路的距离。</p><p>如果存在负权回路，那么就可能不存在最短路径了。</p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_500x0_resize_box_3.png 500w" width=874 height=530 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img13_hubf5b81ab9f8611ee90df3451e3deffb8_113286_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img13.png width=874 height=530 alt=Untitled></noscript></figure></p><p><strong>853. 有边数限制的最短路</strong></p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+const int N = 510, M = 100010;
+int n, m, k;
+int dist[N], backup[N];
+
+struct Edge
+{
+    int a, b, w;  
+}edges[M];
+
+int bellman_ford(){
+    
+    memset(dist, 0x3f, sizeof dist);
+    dist[1] = 0;
+    
+    for(int i = 0; i &lt; k; ++ i) 
+    {
+        memcpy(backup, dist, sizeof dist);   
+        //需要备份一下，防止多条边或串联问题。
+				//因为此题限制最多走k次。
+				//如果没有限制，则无需backup
+        for(int j = 0; j &lt; m; ++ j)
+        {
+            int a = edges[j].a, b = edges[j].b, w = edges[j].w;   
+            dist[b] = min(dist[b], backup[a] + w);
+        }
+    }
+    
+    return dist[n];
+}
+
+int main(){
+    
+    cin &gt;&gt; n &gt;&gt; m &gt;&gt; k;
+    for(int i = 0; i &lt; m; ++ i)
+    {
+        int a, b, w;
+        cin &gt;&gt; a  &gt;&gt; b &gt;&gt; w;
+        edges[i] = {a, b, w};
+    }
+    
+    int t = bellman_ford();
+    //t如果大于无穷大，说明没有达到，为什么要除以2？因为无穷大也可能被更新
+    if(t &gt; 0x3f3f3f3f / 2) puts(&quot;impossible&quot;);
+    else cout &lt;&lt; t;
+    return 0;
+}
+</code></pre><h2 id=spfa>SPFA <a href=#spfa class=anchor aria-hidden=true>#</a></h2><p>不能有负环。</p><p>是对Bellman-ford的优化，长得很像Dijkstra算法。</p><p>步骤为：</p><ol><li>queue ← 1</li><li>while queue 不空 （仅存放dist减小的）<ol><li>取出队头，删除队头t</li><li>用t去更新所有出边。取min（）</li><li>若更新了某个点b，则加入该点入队列。</li></ol></li></ol><p>spfa可能会被卡，需要使用Dijkstra。</p><h3 id=spfa判断最短路>spfa判断最短路 <a href=#spfa%e5%88%a4%e6%96%ad%e6%9c%80%e7%9f%ad%e8%b7%af class=anchor aria-hidden=true>#</a></h3><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;queue&gt;
+#include&lt;algorithm&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+const int N = 150010;
+
+int n, m;
+int h[N], e[N], ne[N], idx, w[N];
+int dist[N];
+bool st[N];
+
+void add(int a, int b, int c)
+{
+    e[idx] = b;
+    ne[idx] = h[a];
+    w[idx] = c;
+    h[a] = idx++;
+}
+
+int spfa(){
+    
+    memset(dist, 0x3f, sizeof dist);
+    dist[1] = 0;
+    
+    queue&lt;int&gt; q;
+    q.push(1);
+    st[1] = true;
+    //是否在队列里。
+    
+    while(q.size())
+    {
+        int t = q.front();
+        q.pop();
+        
+        st[t] = false;
+        
+        for(int i = h[t]; i != -1; i = ne[i])
+        {
+            int j = e[i];
+            if(dist[j] &gt; dist[t] + w[i])
+            {
+                dist[j] = dist[t] + w[i];
+                if(!st[j])
+                {
+                    q.push(j);
+                    st[j] = true;
+                }
+            }
+        }
+        
+    }
+    
+    return dist[n];
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    memset(h, -1, sizeof h);
+    
+    while(m --)
+    {
+        int a, b, c;
+        cin &gt;&gt; a &gt;&gt; b &gt;&gt; c; 
+        add(a, b, c);
+    }
+    int t = spfa();
+
+    if(t == 0x3f3f3f3f) cout &lt;&lt; &quot;impossible&quot;;
+    else cout &lt;&lt; t;
+    return 0;
+}
+</code></pre><h3 id=spfa判断负环>spfa判断负环 <a href=#spfa%e5%88%a4%e6%96%ad%e8%b4%9f%e7%8e%af class=anchor aria-hidden=true>#</a></h3><ul><li><code>dist[x]</code>表示 1到x的最短距离。</li><li><code>cnt[x]</code> 表示边数。最短路的边数。<ul><li>每次更新dist时<code>(dist[x] > dist[t] + w[i])</code>，更新<code>cnt[x] = cnt[t] + 1;</code></li><li>如果<code>cnt[x]</code>出现≥ n的话，那么就比如，=n，那么经过了n条边，一定有n+1个点，一定有两个点是相同的。所以存在负环。</li></ul></li></ul><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;queue&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+const int N = 2010, M = 10010;
+
+int n,m;
+int h[N], w[M], e[M], ne[M], idx;
+int dist[N], cnt[N];
+bool st[N];
+
+void add(int a ,int b, int c)
+{
+    e[idx] = b;
+    ne[idx] = h[a];
+    w[idx] = c;
+    h[a] = idx ++;
+}
+
+bool spfa()
+{
+    memset(dist, 0x3f, sizeof dist);    
+    queue&lt;int&gt;q;
+    
+    //因为负环不是从1开始，所以需要所有点都在里面
+    for(int i = 1; i &lt;= n; ++ i)
+    {
+        st[i] = true;
+        q.push(i);
+    }
+    
+    while(q.size()){
+        int t = q.front();
+        q.pop();
+        st[t] = false;
+        for(int i = h[t]; i != -1; i = ne[i]){
+            int j = e[i];
+            if(dist[j] &gt; dist[t] + w[i]) {
+                dist[j] = dist[t] + w[i];   
+                
+                cnt[j] = cnt[t] + 1;
+                
+                if(cnt[j] &gt;= n)
+                {
+                    return true;
+                }
+                
+                if(!st[j])
+                {
+                    q.push(j);
+                    st[j] = true;
+                }
+            }
+        }
+        
+    }
+    return false;
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    
+    memset(h, -1, sizeof h);
+    
+    for(int i = 0; i &lt; m; ++ i)
+    {
+        int a, b, c;
+        cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        add(a, b, c);
+    }
+    
+    if(spfa()) puts(&quot;Yes&quot;);
+    else puts(&quot;No&quot;);
+    return 0;
+}
+</code></pre><h2 id=floyd>Floyd <a href=#floyd class=anchor aria-hidden=true>#</a></h2><p>求最短路，基于动态规划</p><p>三重循环：d(i, j)存i，j点的距离，k是阶段</p><ol><li>k from 1 to n:<ol><li>i form 1 to n：<ol><li>j from 1 to n<ol><li>d(i, j) = min( d(i, j), d(i, k) + d(k, j));</li></ol></li></ol></li></ol></li></ol><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;cstring&gt;
+using namespace std;
+
+const int N = 210, INF = 1e9;
+//1e9，由于后面需要d+d，所以不能越界，取1e9
+int n, m, Q;
+
+int d[N][N]; //邻接矩阵
+
+void floyd(){
+    for(int k = 1; k &lt;= n; ++ k)
+        for(int i = 1; i &lt;= n; ++ i)
+            for(int j = 1; j &lt;= n; ++ j)
+                d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+    return;
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m &gt;&gt; Q;
+    for(int i = 1; i &lt;= n; ++ i)
+        for(int j = 1; j &lt;= n; ++ j)
+            if( i == j) d[i][j] = 0;
+            else d[i][j] = INF;
+    while(m--)
+    {
+        int a, b, w;
+        cin &gt;&gt; a &gt;&gt; b &gt;&gt;w;
+        d[a][b] = min(d[a][b], w);
+    }
+    floyd();
+    while(Q--)
+    {
+        int a, b;
+        cin &gt;&gt; a &gt;&gt; b;
+        if(d[a][b] &gt; INF/2) 
+            cout &lt;&lt; &quot;impossible&quot; &lt;&lt; endl;
+        else cout &lt;&lt; d[a][b] &lt;&lt; endl;
+    }
+    return 0;
+}
+</code></pre><h1 id=最小生成树>最小生成树 <a href=#%e6%9c%80%e5%b0%8f%e7%94%9f%e6%88%90%e6%a0%91 class=anchor aria-hidden=true>#</a></h1><ul><li>对应无向图</li><li>Prim算法，普利姆算法<ul><li>类似Dijkstra算法</li><li>朴素版Prim，对应稠密图 O(n^2)</li><li>堆优化Prim，对应稀疏图，O(mlogn) ——不常用</li></ul></li><li>Kruskal算法，克鲁斯卡尔算法<ul><li>O(mlogm)</li><li>稀疏图尽量用这个</li></ul></li></ul><h2 id=朴素版的prim算法>朴素版的Prim算法 <a href=#%e6%9c%b4%e7%b4%a0%e7%89%88%e7%9a%84prim%e7%ae%97%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><p>算法流程：</p><ol><li>先将所有dist距离初始化为+$\infty$</li><li>n次迭代，找到集合外距离集合s中的所有点距离最近的点。（相较于Dijstra算法，Dijstra是距离起点），然后更新其他距离，st[]=true。</li></ol><p>可以处理重边和自环，负数权边。</p><p>稠密图</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstdio&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+const int N = 1000, INF = 0x3f3f3f3f;
+
+int n, m;
+int g[N][N];
+int dist[N];
+bool st[N];
+
+int prim(){
+    memset(dist, 0x3f, sizeof dist);
+    
+    int res = 0; //和
+    for(int i = 0; i &lt; n ; ++ i)
+    {
+        int t = -1;
+        for(int j = 1; j &lt;= n; ++ j)
+            if(!st[j] &amp;&amp; (t == -1 || dist[t] &gt; dist[j]))
+                t = j;
+            
+        if(i &amp;&amp; dist[t] == INF) return INF; //说明不连通
+        
+        if(i) res += dist[t];
+        //先加再更新，因为有负环，导致dist[t]被更新
+
+        for(int j = 1; j &lt;= n; j ++)
+            dist[j] = min(dist[j], g[t][j]);
+        
+        st[t] = true;
+    }
+    
+    return res;
+    
+}
+
+int main(){
+    scanf(&quot;%d%d&quot;, &amp;n, &amp;m);
+    
+    memset(g, 0x3f, sizeof g);
+    
+    while(m --)
+    {
+        int a,b,c;
+        cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        g[a][b] = g[b][a] = min(g[a][b], c);
+    } //取最小值
+    
+    int t = prim();
+    
+    if (t == INF) puts(&quot;impossible&quot;);
+    else printf(&quot;%d\n&quot;, t);
+    
+    return 0;
+}
+</code></pre><h2 id=kruskal>Kruskal <a href=#kruskal class=anchor aria-hidden=true>#</a></h2><p>很优美的算法</p><p>处理稀疏图</p><ol><li>将所有边按照从小到大排序 O(mlogm)</li><li>枚举每条边ab，权重为c，如果a和b没有连通，就将c边加入集合中。<ol><li>需要并查集，时间复杂度是O(1)</li><li>总共的复杂度是O(m)</li></ol></li></ol><p>所以复杂度是O(mlogm)，主要在排序。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+const int N = 200010;
+
+int n, m;
+int p[N];
+
+struct Edge
+{
+    int a, b, w;
+    bool operator&lt;(const Edge &amp;W) const 
+    {
+        return w &lt; W.w;
+    }
+    
+}edges[N];
+
+int find(int x)
+{
+    if(p[x] != x) p[x] = find(p[x]);
+    return p[x];
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    for(int i = 0; i &lt;m; ++ i)
+    {
+        int a,b,w ;
+        cin &gt;&gt; a &gt;&gt; b &gt;&gt; w;
+        edges[i] = {a, b, w};
+    }
+    
+    sort(edges, edges + m);
+    
+    for(int i = 1; i &lt;= n; ++ i)
+        p[i] = i;
+    
+    int res = 0; int cnt = 0;
+    for(int i = 0; i &lt; m; ++ i)
+    {
+        int a = edges[i].a, b= edges[i].b, w= edges[i].w;
+        a = find(a), b = find(b);
+        if (a!= b)
+        {
+            p[a] = b;   
+            res += w;
+            cnt ++;
+        }
+    }
+    if(cnt &lt; n-1) puts(&quot;impossible&quot;);
+    else printf(&quot;%d&quot;, res);
+    
+    return 0;
+}
+</code></pre><h1 id=染色法判定二分图>染色法判定二分图 <a href=#%e6%9f%93%e8%89%b2%e6%b3%95%e5%88%a4%e5%ae%9a%e4%ba%8c%e5%88%86%e5%9b%be class=anchor aria-hidden=true>#</a></h1><ul><li>判别一个图是不是二分图。</li><li>染色法 O(n + m)</li></ul><p>一个图是二分图，当且仅当图中不含奇数环。</p><ul><li>图中可能存在重边和自环</li></ul><blockquote><p>二部图又叫二分图，是图论中的一种特殊模型。设G=(V,E)是一个无向图，如果顶点V可分割为两个互不相交的子集(A,B)，并且图中的每条边（i，j）所关联的两个顶点i和j分别属于这两个不同的顶点集(i in A,j in B)，则称图G为一个二分图。简单来说，如果图中点可以被分为两组，并且使得所有边都跨越组的边界，则这就是一个二分图。准确地说：把一个图的顶点划分为两个不相交子集 ，使得每一条边都分别连接两个集合中的顶点。如果存在这样的划分，则此图为一个二分图</p></blockquote><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+//稀疏图用邻接表
+const int N = 100010, M = 200010;
+
+int n, m;
+int h[N], e[M], ne[M], idx;
+int color[N];
+
+void add(int a, int b)
+{
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+bool dfs(int u, int c)
+{
+    // cout &lt;&lt; u &lt;&lt; c &lt;&lt; endl;
+    color[u] = c;
+    for(int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(!color[j])
+        {
+            if(!dfs(j, 3 -c )) return false;
+        }else if(color[j] == c) return false;
+    }
+    return true;
+}
+
+int main(){
+    cin &gt;&gt; n &gt;&gt; m;
+    memset(h, -1, sizeof h);
+    
+    while(m --)
+    {
+        int a, b;
+        cin &gt;&gt; a &gt;&gt; b;
+        add(a,b), add(b,a);
+    }
+    
+    bool flag = true;
+    for(int i = 1; i &lt;= n; ++ i)
+    {
+        if(!color[i]){
+            if(!dfs(i, 1))
+            {
+                flag = false;
+                break;
+            }
+        }
+    }
+
+    if(flag) puts(&quot;Yes&quot;);
+    else puts(&quot;No&quot;);
+    return 0;
+}
+</code></pre><h2 id=匈牙利算法>匈牙利算法 <a href=#%e5%8c%88%e7%89%99%e5%88%a9%e7%ae%97%e6%b3%95 class=anchor aria-hidden=true>#</a></h2><ul><li>匈牙利算法O(mn)，实际运行时间比较小。</li></ul><p><a href=https://www.acwing.com/problem/content/863/>https://www.acwing.com/problem/content/863/</a></p><p><figure class=figure><img class="figure-img img-fluid lazyload blur-up" data-sizes=auto src=https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_20x0_resize_box_3.png data-srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_500x0_resize_box_3.png 500w" width=1036 height=442 alt=Untitled><noscript><img class="figure-img img-fluid" sizes=100vw srcset="https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_900x0_resize_box_3.png 900w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_800x0_resize_box_3.png 800w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_700x0_resize_box_3.png 700w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_600x0_resize_box_3.png 600w,https://notes.ming.ac/docs/algorithm/algorithm_03/img14_hu0d19bc38a5343aedfd5327db6869c1fd_125293_500x0_resize_box_3.png 500w" src=https://notes.ming.ac/docs/algorithm/algorithm_03/img14.png width=1036 height=442 alt=Untitled></noscript></figure></p><p>已经是一个二分图，任何一个边必须是两个组的点的连线，求边的最大数量。</p><pre><code class=language-cpp>#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;cstring&gt;
+
+using namespace std;
+
+const int N = 1010, M = 100010;
+
+int n1, n2, m;
+int h[N], e[M], ne[M], idx;
+
+int match[N]; //匹配的点
+bool st[N]; 
+
+void add(int a, int b)
+{
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+bool find(int x)
+{
+    for(int i = h[x]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if( !st[j])
+        {
+            st[j] = true;
+            //如果没有match或者match的点有其他的点连。
+            if(match[j] == 0 || find(match[j]))
+            {
+                match[j] = x;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+int main(){
+    cin &gt;&gt; n1 &gt;&gt; n2 &gt;&gt; m;
+    
+    memset(h, -1, sizeof h);
+    
+    while(m --)
+    {
+        int a,b;
+        cin &gt;&gt; a &gt;&gt; b;
+        add(a, b);
+    }
+    int res = 0;
+    for(int i = 1; i &lt;= n1; ++ i)
+    {
+        memset(st, false, sizeof st);
+        if(find(i)) res++;
+    }
+    cout &lt;&lt; res;
+    return 0;
+}
+</code></pre><div class="docs-navigation d-flex justify-content-between"><a href=https://notes.ming.ac/docs/algorithm/algorithm_02/><div class="card my-1"><div class="card-body py-2">&larr; 「Algorithm」02 数据结构</div></div></a><a class=ms-auto href=https://notes.ming.ac/docs/prologue/introduction/><div class="card my-1"><div class="card-body py-2">Introduction &rarr;</div></div></a></div></main></div></div></div><footer class="footer text-muted"><div class=container-xxl><div class=row><div class="col-lg-8 order-last order-lg-first"><ul class=list-inline><li class=list-inline-item>© 2021 <a href=https://notes.ming.ac>Ming Notes</a> Powered by <a href=https://gohugo.io>Hugo</a> & <a href=https://getdoks.org>Doks</a></li></ul></div><div class="col-lg-8 order-first order-lg-last text-lg-end"><ul class=list-inline></ul></div></div></div></footer><script src=https://notes.ming.ac/js/bootstrap.min.592b9faf6c83a2bda564a377cf82f9a67546b198510a93fdb0728f9622ec22729d44be02fb2ea16c3fe5365ae1806259cd111932ca28e68b66462d6937635bab.js integrity="sha512-WSufr2yDor2lZKN3z4L5pnVGsZhRCpP9sHKPliLsInKdRL4C+y6hbD/lNlrhgGJZzREZMsoo5otmRi1pN2Nbqw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/highlight.min.e13cfba4c5524e30386cb9ea71f0f191f39d15b25b222f4b67549689f7c076158f42a2282446044f5cdacc76a6d003efbfa252a84aea0116703803b6339ae35f.js integrity="sha512-4Tz7pMVSTjA4bLnqcfDxkfOdFbJbIi9LZ1SWiffAdhWPQqIoJEYET1zazHam0APvv6JSqErqARZwOAO2M5rjXw==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/vendor/katex/dist/katex.min.849bcb0a26d9f709f5e2355f5188d1c21e07bb04544918a1c2a6d290dc2ebcb9b787ba92911f609242c898b7ce8009c541be9153a357e673818164f829d917fe.js integrity="sha512-hJvLCibZ9wn14jVfUYjRwh4HuwRUSRihwqbSkNwuvLm3h7qSkR9gkkLImLfOgAnFQb6RU6NX5nOBgWT4KdkX/g==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/js/vendor/katex/dist/contrib/auto-render.min.916823ec103cf367b71e28a6f01513cb9c3ac6708ccb5229402ec46b8e30a8b25003db694df35d80e9dd666a371f327c6152790617b6256390c164109a90bd4c.js integrity="sha512-kWgj7BA882e3Hiim8BUTy5w6xnCMy1IpQC7Ea44wqLJQA9tpTfNdgOndZmo3HzJ8YVJ5Bhe2JWOQwWQQmpC9TA==" crossorigin=anonymous defer></script>
+<script src=https://notes.ming.ac/main.min.bd9f5b8b292cbd0e3af8211fe2167cb7f9a2c460f690f57a635ba263eecd172102b0e381d3200b5a4375cfc909b5e67d35f45c1bb946ffdd6deaa6b3cbafc1fb.js integrity="sha512-vZ9biyksvQ46+CEf4hZ8t/mixGD2kPV6Y1uiY+7NFyECsOOB0yALWkN1z8kJteZ9NfRcG7lG/91t6qazy6/B+w==" crossorigin=anonymous defer></script></body></html>
